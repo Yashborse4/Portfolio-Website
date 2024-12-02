@@ -1,6 +1,7 @@
 /* GENERAL */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+/* GENERAL */
 
 * {
   margin: 0;
@@ -197,6 +198,7 @@ section {
 .title {
   font-size: 3rem;
   text-align: center;
+
 }
 
 #socials-container {
@@ -211,6 +213,7 @@ section {
 .icon {
   cursor: pointer;
   height: 2rem;
+ gap: 5rem;
 }
 
 /* BUTTONS */
@@ -264,16 +267,17 @@ section {
 /* ABOUT SECTION */
 
 #about {
-  position: relative;
+  position: flex;
 }
 
 .about-containers {
   gap: 2rem;
   margin-bottom: 2rem;
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 
 .about-details-container {
+  margin-top: 20rem;
   justify-content: center;
   flex-direction: column;
 }
@@ -317,7 +321,7 @@ section {
 /* EXPERIENCE SECTION */
 
 #experience {
-  position: relative;
+  position: flex;
 }
 
 .experience-sub-title {
@@ -376,6 +380,7 @@ max-width: 600px;
 .project-title {
   margin: 1rem;
   color: black;
+  margin-top: 20rem;
 }
 
 .project-btn {
@@ -433,3 +438,4 @@ footer {
 footer p {
   text-align: center;
 }
+
