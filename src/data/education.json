@@ -1,0 +1,116 @@
+[
+  {
+    "id": 1,
+    "institution": "JSPM's BSIOTR College of Engineering",
+    "degree": "Bachelor of Engineering in Computer Science",
+    "duration": "2023 - 2026",
+    "location": "Pune, India",
+    "percentage": "78.5%",
+    "description": "Comprehensive study of computer science and engineering fundamentals with specialization in mobile application development and cross-platform technologies.",
+    "relevantCoursework": [
+      "Data Structures and Algorithms",
+      "Mobile Application Development",
+      "Software Engineering",
+      "Database Management Systems",
+      "Operating Systems",
+      "Computer Networks",
+      "Object Oriented Programming",
+      "Web Technologies"
+    ],
+    "achievements": [
+      "Consistent academic performance with 78.5% aggregate",
+      "Active member of Mobile App Development Club",
+      "Participated in multiple hackathons and coding competitions",
+      "Built several React Native projects during coursework"
+    ],
+    "type": "degree"
+  },
+  {
+    "id": 2,
+    "institution": "Shri S.N.J.B Polytechnic Chandwad",
+    "degree": "Diploma in Computer Engineering",
+    "duration": "2020 - 2023",
+    "location": "Nashik, India",
+    "percentage": "84.5%",
+    "description": "Foundation in computer engineering principles with focus on programming, web development, and mobile technologies.",
+    "relevantCoursework": [
+      "Programming in C/C++",
+      "Java Programming",
+      "Web Development",
+      "Database Systems",
+      "Computer Graphics",
+      "Software Testing",
+      "Mobile App Development",
+      "Data Communication"
+    ],
+    "achievements": [
+      "Graduated with First Class with Distinction (85.2%)",
+      "Top 5% of the batch",
+      "Led college technical fest mobile app development workshop",
+      "Built first mobile app during final year project"
+    ],
+    "type": "diploma"
+  },
+  {
+    "id": 2,
+    "institution": "FreeCodeCamp",
+    "degree": "Full Stack Web Development Certification",
+    "duration": "2022",
+    "location": "Online",
+    "description": "Comprehensive certification program covering modern web development technologies and best practices.",
+    "relevantCoursework": [
+      "Responsive Web Design",
+      "JavaScript Algorithms and Data Structures",
+      "Frontend Development Libraries",
+      "Data Visualization",
+      "APIs and Microservices",
+      "Quality Assurance"
+    ],
+    "achievements": [
+      "Completed 1800+ hours of coursework",
+      "Built 30+ projects",
+      "Earned 6 certificates"
+    ],
+    "type": "certification"
+  },
+  {
+    "id": 3,
+    "institution": "AWS",
+    "degree": "AWS Certified Solutions Architect - Associate",
+    "duration": "2024",
+    "location": "Online",
+    "description": "Professional certification demonstrating expertise in designing distributed systems on AWS.",
+    "relevantCoursework": [
+      "AWS Core Services",
+      "Security and Compliance",
+      "Technology Solutions",
+      "Cost Optimization",
+      "Performance Optimization"
+    ],
+    "achievements": [
+      "Passed on first attempt",
+      "Score: 892/1000"
+    ],
+    "type": "certification"
+  },
+  {
+    "id": 4,
+    "institution": "Google",
+    "degree": "Google Cloud  Developer",
+    "duration": "2024",
+    "location": "Online",
+    "description": "Professional certification for designing, building, and deploying applications on Google Cloud Platform.",
+    "relevantCoursework": [
+      "Application Development",
+      "Cloud Storage and Databases",
+      "Security Implementation",
+      "Testing and Deployment",
+      "Application Performance Monitoring"
+    ],
+    "achievements": [
+      "Achieved certification with distinction",
+      "Completed hands-on labs and projects"
+    ],
+    "type": "certification"
+  }
+]

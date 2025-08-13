@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "company": "Hindustan Aeronautics Limited (HAL)",
+    "position": "React Native Developer",
+    "duration": "2023 - Present",
+    "location": "Bangalore, India",
+    "description": "Developing cross-platform mobile applications for aerospace and defense sector using React Native, focusing on high-performance, secure, and scalable solutions.",
+    "technologies": ["React Native", "TypeScript", "Redux Toolkit", "Firebase", "Native Modules", "React Navigation", "Expo"],
+    "achievements": [
+      "Built secure mobile applications for defense sector",
+      "Implemented offline-first architecture for critical apps",
+      "Optimized app performance achieving 60fps animations",
+      "Integrated native device features and sensors"
+    ]
+  }
+]

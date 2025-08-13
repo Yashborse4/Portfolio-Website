@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "title": "AutoTradeX - Used Car Marketplace",
+    "description": "A comprehensive e-commerce platform for buying and selling used cars with advanced search, AI-based price prediction, and secure payment processing.",
+    "image": "/assets/images/autotradex-project.jpg",
+    "technologies": [
+      "React Native",
+      "Java ",
+      "Spring Boot",
+      "PostgreSQL",
+      "JWT Authentication",
+      "GraphQL API",
+      "Redux Toolkit"
+  
+    ],
+    "githubUrl": "https://github.com/yashborse/autotradex",
+    "liveUrl": "https://autotradex-demo.vercel.app",
+    "featured": true,
+    "category": "Web Application",
+    "completedDate": "2024-01-15",
+    "features": [
+      "Advanced car search with filters (price, year, mileage, etc.)",
+      "AI-powered price prediction based on market trends",
+      "Secure user authentication with JWT and Firebase",
+      "Real-time chat between buyers and sellers",
+      "Image upload and car photo gallery",
+      "Saved searches and favorite listings",
+      "Responsive design for all devices"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Duplicate File Analyzer",
+    "description": "A tool for analyzing duplicate files on a computer using Python.",
+    "image": "/assets/images/expense-manager-project.jpg",
+    "technologies": ["React Native", "SQLite", "React Navigation", "Charts", "AsyncStorage"],
+    "githubUrl": "https://github.com/yashborse/expense-manager",
+    "liveUrl": "https://expo.dev/@yashborse/expense-manager",
+    "featured": true,
+    "category": "Mobile App",
+    "completedDate": "2023-11-20",
+    "features": [
+      "Alerts and notifications of duplicate files" ,
+      "recommend before downloading",
+      "Secure local data storage",
+      "Support Distrbuted Storage "
+    ]
+  },
+  {
+    "id": 3,
+    "title": "CampusGuard - Smart Surveillance System",
+    "description": "An intelligent campus security solution using computer vision for real-time monitoring, threat detection, and automated alerts.",
+    "image": "/assets/images/campusguard-project.jpg",
+    "technologies": [
+      "Python",
+      "OpenCV",
+      "YOLOv8 (Object Detection)",
+      "Flask",
+      "WebSocket",
+      "TensorFlow",
+      "PostgreSQL"
+    ],
+    "githubUrl": "https://github.com/yashborse/campusguard",
+    "liveUrl": "#",
+    "featured": true,
+    "category": "AI/ML Application",
+    "completedDate": "2023-09-10",
+    "features": [
+      "Real-time object and person detection",
+      "Suspicious activity alerts",
+      "Face recognition for authorized personnel",
+      "Crowd density monitoring",
+      "Automated incident reporting",
+      "Multi-camera support",
+      "Web-based dashboard for monitoring"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "NetScan Pro - Network Analyzer",
+    "description": "A comprehensive network analysis tool for monitoring, scanning, and troubleshooting network infrastructure with real-time insights.",
+    "image": "/assets/images/netscan-project.jpg",
+    "technologies": [
+      "Python",
+      "Scapy",
+      "NetworkX",
+      "Django",
+      "WebSockets",
+      "Docker",
+      "Redis"
+    ],
+    "githubUrl": "https://github.com/yashborse/netscan-pro",
+    "liveUrl": "#",
+    "featured": false,
+    "category": "Network Utility",
+    "completedDate": "2023-07-25",
+    "features": [
+      "Network discovery and device fingerprinting",
+      "Port scanning and service detection",
+      "Network traffic analysis and monitoring",
+      "Bandwidth usage tracking",
+      "Security vulnerability scanning",
+      "Interactive network topology mapping",
+      "Custom scan scheduling and reporting"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Finance Management using AI ",
+    "description": "A tool for managing finance using AI.",
+    "image": "/assets/images/quiz-master-project.jpg",
+    "technologies": ["Python", "TypeScript", "Firebase", "React ", "Lottie"],
+    "githubUrl": "https://github.com/yashborse/quiz-master",
+    "liveUrl": "https://expo.dev/@yashborse/quiz-master",
+    "featured": false,
+    "category": "Mobile App",
+    "completedDate": "2023-05-15",
+    "features": [
+      "Multiple quiz categories",
+      "Real-time leaderboards",
+      "Smooth animations with Lottie",
+      "Social sharing capabilities",
+      "Offline quiz download"
+    ]
+  }
+]
