@@ -207,7 +207,7 @@ const Navbar = () => {
     { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://www.linkedin.com/in/yashborse/', label: 'LinkedIn' },
     { icon: FaTwitter, href: 'https://twitter.com/yashborse4u', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:yash_borse432005@gmail.com', label: 'Email' }
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' }
   ];
 
   const closeMobileMenu = () => {

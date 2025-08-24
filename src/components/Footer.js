@@ -237,7 +237,7 @@ const Footer = () => {
     { icon: FaGithub, href: 'https://github.com/yashborse', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://linkedin.com/in/yashborse', label: 'LinkedIn' },
     { icon: FaTwitter, href: 'https://twitter.com/yashborse', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:yashborse.dev@gmail.com', label: 'Email' }
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' }
   ];
 
   const quickLinks = [
@@ -325,11 +325,11 @@ const Footer = () => {
               <ContactInfo>
                 <div className="contact-item">
                   <FaEnvelope className="icon" />
-                  <a href="mailto:yashborse.dev@gmail.com">yashborse.dev@gmail.com</a>
+                  <a href="mailto:yashborse432005@gmail.com">yashborse432005@gmail.com</a>
                 </div>
                 <div className="contact-item">
                   <span>📞</span>
-                  <a href="tel:+919876543210">+91 98765 43210</a>
+                  <a href="tel:+919403919940">+91 940 391 9940</a>
                 </div>
                 <div className="contact-item">
                   <span>📍</span>

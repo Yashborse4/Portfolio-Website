@@ -311,7 +311,7 @@ const Hero = () => {
   const socialLinks = [
     { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://www.linkedin.com/in/yashborse', label: 'LinkedIn' },
-    { icon: FaEnvelope, href: 'mailto:yash_borse@yahoo.com', label: 'Email' },
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' },
   ];
 
   const containerVariants = {
