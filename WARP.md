@@ -165,6 +165,18 @@ node change-domain.js https://yashborse4.github.io/Portfolio-Website/
 - Images are referenced from public directory for optimal loading
 - Glassmorphism effects use backdrop-filter with WebKit prefixes
 
+## Image Handling
+
+### Static Images
+- Place images in `public/assets/` directory
+- Reference images using `${process.env.PUBLIC_URL}/assets/filename.ext`
+- This ensures proper path resolution for both development and GitHub Pages deployment
+
+### Profile Picture Setup
+- Main profile image: `public/assets/pic.png` (preferred) or `public/assets/pic.jpg`
+- Image automatically displays as circular with `object-fit: cover`
+- Responsive sizing: 300px on desktop, 200px on mobile
+
 ## Responsive Design
 
 - Mobile-first responsive design with consistent breakpoints
