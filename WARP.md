@@ -141,7 +141,22 @@ const StyledCard = styled.div`
 - Homepage field in package.json set to `https://yashborse4.github.io/Portfolio-Website/`
 - `npm run deploy` builds and pushes to gh-pages branch
 - Website is accessible at: https://yashborse4.github.io/Portfolio-Website/
-- To change domain: Update the `homepage` field in package.json and redeploy
+
+### Changing Domain (Easy Method)
+Use the provided script to change domains easily:
+```bash
+# Change to a custom domain
+node change-domain.js https://yashborse.tech
+
+# Change back to GitHub Pages
+node change-domain.js https://yashborse4.github.io/Portfolio-Website/
+```
+
+### Manual Domain Change
+- Update the `homepage` field in package.json
+- Run `npm run build` to test
+- Run `npm run deploy` to deploy
+- Commit and push changes
 
 ## Performance Considerations
 
