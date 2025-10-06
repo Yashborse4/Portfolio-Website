@@ -230,8 +230,14 @@ const ProfileImage = styled(motion.div)`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 6rem;
-    color: ${({ theme }) => theme.colors.textMuted};
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
   }
   
   @media (max-width: 768px) {
@@ -311,7 +317,7 @@ const Hero = () => {
   const socialLinks = [
     { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://www.linkedin.com/in/yashborse', label: 'LinkedIn' },
-    { icon: FaEnvelope, href: 'mailto:yash_borse@yahoo.com', label: 'Email' },
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' },
   ];
 
   const containerVariants = {
@@ -435,9 +441,7 @@ const Hero = () => {
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div className="image-inner">
-            <img src="/assets/pic.png" alt="Profile picture" />
-
-
+              <img src={`${process.env.PUBLIC_URL}/assets/pic.png`} alt="Yash Borse" />
             </div>
           </ProfileImage>
         </ProfileSection>

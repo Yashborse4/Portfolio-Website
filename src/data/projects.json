@@ -36,7 +36,7 @@
     "image": "/assets/images/expense-manager-project.jpg",
     "technologies": ["React Native", "SQLite", "React Navigation", "Charts", "AsyncStorage"],
     "githubUrl": "https://github.com/yashborse/expense-manager",
-    "liveUrl": "https://expo.dev/@yashborse/expense-manager",
+    "liveUrl": "https://expo.tech/@yashborse/expense-manager",
     "featured": true,
     "category": "Mobile App",
     "completedDate": "2023-11-20",

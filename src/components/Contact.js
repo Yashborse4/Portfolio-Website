@@ -255,8 +255,8 @@ const Contact = () => {
     {
       icon: FaEnvelope,
       label: 'Email',
-      value: 'yash_borse432005@gmail.com',
-      href: 'mailto:yash_borse432005@gmail.com'
+      value: 'yashborse432005@gmail.com',
+      href: 'mailto:yashborse432005@gmail.com'
     },
     {
       icon: FaPhone,
@@ -418,7 +418,7 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="yash_borse432005@gmail.com"
+                placeholder="yashborse432005@gmail.com"
                 required
               />
             </FormGroup>
