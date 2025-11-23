@@ -1,354 +1,90 @@
-import React, { useRef } from 'react';
-import styled from 'styled-components';
-import { motion, useInView } from 'framer-motion';
-import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
-import { glassCard } from '../styles/mixins';
-import jobsData from '../data/jobs.json';
+import React from 'react';
+import { motion } from 'framer-motion';
 
-const ExperienceContainer = styled.section`
-  padding: 100px 0;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  
-  @media (max-width: 768px) {
-    padding: 80px 1rem;
-  }
-`;
-
-const SectionTitle = styled(motion.h2)`
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.text}, ${({ theme }) => theme.colors.primary});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const SectionSubtitle = styled(motion.p)`
-  text-align: center;
-  font-size: 1.125rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 4rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const Timeline = styled.div`
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(
-      180deg,
-      ${({ theme }) => theme.colors.primary},
-      ${({ theme }) => theme.colors.accent}
-    );
-    
-    @media (max-width: 768px) {
-      left: 30px;
-    }
-  }
-`;
-
-const ExperienceItem = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  margin-bottom: 4rem;
-  position: relative;
-  
-  &:nth-child(even) {
-    flex-direction: row-reverse;
-    
-    .content {
-      margin-right: 2rem;
-      margin-left: 0;
-      
-      @media (max-width: 768px) {
-        margin-right: 0;
-        margin-left: 2rem;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      flex-direction: row;
-    }
-  }
-  
-  &:nth-child(odd) .content {
-    margin-left: 2rem;
-    
-    @media (max-width: 768px) {
-      margin-left: 2rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-`;
-
-const TimelineIcon = styled(motion.div)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  z-index: 2;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
-  
-  @media (max-width: 768px) {
-    left: 30px;
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-`;
-
-const ExperienceCard = styled(motion.div)`
-  ${glassCard}
-  flex: 1;
-  max-width: 45%;
-  padding: 2rem;
-  position: relative;
-  
-  @media (max-width: 768px) {
-    max-width: none;
-    flex: none;
-    width: calc(100% - 6rem);
-  }
-  
-  .company {
-    font-family: ${({ theme }) => theme.fonts.secondary};
-    font-size: 1.375rem;
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.5rem;
-  }
-  
-  .position {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 1rem;
-  }
-  
-  .meta {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      color: ${({ theme }) => theme.colors.textSecondary};
-      
-      .icon {
-        color: ${({ theme }) => theme.colors.primary};
-      }
-    }
-  }
-  
-  .description {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: ${({ theme }) => theme.colors.textSecondary};
-    margin-bottom: 1.5rem;
-  }
-`;
-
-const TechnologiesContainer = styled.div`
-  margin-bottom: 1.5rem;
-  
-  .technologies-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .technologies-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-`;
-
-const TechTag = styled.span`
-  background: ${({ theme }) => theme.colors.primaryGlass};
-  color: ${({ theme }) => theme.colors.primary};
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid ${({ theme }) => theme.colors.primary}30;
-`;
-
-const AchievementsList = styled.div`
-  .achievements-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .achievement {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.textSecondary};
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    .icon {
-      color: ${({ theme }) => theme.colors.success};
-      margin-top: 0.125rem;
-      flex-shrink: 0;
-    }
-  }
-`;
+const experiences = [
+  {
+    title: 'Cross-Platform Mobile Developer (React Native)',
+    company: 'Hindustan Aeronautics Limited (HAL)',
+    period: 'Oct 2024 - Present',
+    description: 'Building secure, offline-ready Android and React Native systems for aviation-grade operations.',
+    achievements: [
+      'LCA Inspection & Review Sheet Automation – Developed a digital inspection system to manage 1,00,000+ mandatory checks for LCA aircraft components, replacing manual review sheets to reduce human error and improve traceability.',
+      'Designed structured data capture modules to ensure inspection accuracy during assembly and pre-flight tests, with real-time review logs for supervisors to improve workflow transparency.',
+      'Enhanced compliance with aviation safety standards through systematic validation and audit-ready inspection records.',
+      'LCA Loom Board Projection System – Built an advanced loom board projection tool with an ultra-short-throw projector to replace manual wire-routing charts and printed boards, achieving up to 90% reduction in loom routing time.',
+      'Added zoom, highlight, and navigation features to quickly identify specific wiring paths, making loom setup faster, cleaner, and error-free.',
+      'SU-30 MKI Dismantling & Damage Management – Developed a secure Android-based inspection system for recording defects during SU-30 MKI overhaul with image capture, barcode tagging, and part identification for precise documentation.',
+      'Improved communication between ground teams and overhaul engineers through instant data syncing, reducing paperwork and ensuring traceable repair history for every dismantled component.',
+      'LCA Tejas Loom Management App – Created a dedicated Android app to manage loom assemblies used in LCA Tejas aircraft, automating storage, retrieval, version control, and routing details for complex wiring looms.',
+      'Enabled technicians to quickly identify loom numbers, lengths, checkpoints, and installation guidelines while adding secure access control for sensitive wiring data.',
+      'CNC Shop Production & Job Tracking – Built an Android application to manage CNC shop job allocation, providing operators with real-time job lists, work order details, part dimensions, and toolpath information.',
+      'Designed supervisor views to track job progress, delays, and machine utilization, improving production scheduling accuracy and maintaining complete history logs for audits and part traceability.',
+      'Military-Grade Android Launcher – Developed a custom high-security Android launcher with full device lockdown, including disabled WiFi/Bluetooth/Hotspot, blocked unauthorized apps, and restricted system settings.',
+      'Implemented single-app or mission-specific mode with tamper-proof protections and remote supervisor configuration of allowed features, creating a distraction-free, secure UI for defence environments and reducing device misuse and data leakage risks.',
+    ],
+    tech: ['React Native', 'Android', 'Java', 'Kotlin', 'SQLite', 'Redux'],
+  },
+];
 
 const Experience = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        duration: 0.5
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut'
-      }
-    }
-  };
-
-  const iconVariants = {
-    hidden: { scale: 0, rotate: -180 },
-    visible: {
-      scale: 1,
-      rotate: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 200,
-        damping: 10
-      }
-    }
-  };
-
   return (
-    <ExperienceContainer id="experience" ref={ref}>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-      >
-        <SectionTitle variants={itemVariants}>
-          Professional Experience
-        </SectionTitle>
-        
-        <SectionSubtitle variants={itemVariants}>
-          A journey through my professional growth and achievements
-        </SectionSubtitle>
-        
-        <Timeline>
-          {jobsData.map((job, index) => (
-            <ExperienceItem key={job.id} variants={itemVariants}>
-              <TimelineIcon
-                variants={iconVariants}
-                whileHover={{ scale: 1.2, rotate: 360 }}
-                transition={{ duration: 0.5 }}
-              >
-                <FaBriefcase />
-              </TimelineIcon>
-              
-              <ExperienceCard
-                className="content"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 10 }}
-              >
-                <h3 className="company">{job.company}</h3>
-                <h4 className="position">{job.position}</h4>
-                
-                <div className="meta">
-                  <div className="meta-item">
-                    <FaCalendar className="icon" />
-                    <span>{job.duration}</span>
+    <section id="experience" className="py-20 bg-white text-slate-900">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+          className="text-4xl font-bold text-center mb-16 font-sora"
+        >
+          Professional <span className="text-blue-500">Experience</span>
+        </motion.h2>
+
+        <div className="relative border-l border-gray-200 ml-3 md:ml-6 space-y-12">
+          {experiences.map((exp, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              className="relative pl-8 md:pl-12"
+            >
+              <div className="absolute -left-1.5 bg-blue-500 h-3 w-3 rounded-full border-4 border-white"></div>
+
+              <div className="bg-white shadow-md p-6 rounded-xl border border-gray-100 hover:border-blue-500/30 transition-all duration-300">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 font-sora">{exp.title}</h3>
+                    <p className="text-blue-600 font-medium">{exp.company}</p>
                   </div>
-                  <div className="meta-item">
-                    <FaMapMarkerAlt className="icon" />
-                    <span>{job.location}</span>
-                  </div>
+                  <span className="text-slate-500 text-sm mt-2 md:mt-0 font-mono">{exp.period}</span>
                 </div>
-                
-                <p className="description">{job.description}</p>
-                
-                <TechnologiesContainer>
-                  <div className="technologies-label">Technologies Used</div>
-                  <div className="technologies-list">
-                    {job.technologies.map((tech, techIndex) => (
-                      <TechTag key={techIndex}>{tech}</TechTag>
-                    ))}
-                  </div>
-                </TechnologiesContainer>
-                
-                <AchievementsList>
-                  <div className="achievements-label">Key Achievements</div>
-                  {job.achievements.map((achievement, achIndex) => (
-                    <div key={achIndex} className="achievement">
-                      <FaCheckCircle className="icon" />
-                      <span>{achievement}</span>
-                    </div>
+
+                <p className="text-slate-600 mb-4 font-poppins italic">{exp.description}</p>
+
+                <ul className="list-disc list-inside text-slate-600 mb-6 space-y-2 font-poppins text-sm">
+                  {exp.achievements.map((achievement, i) => (
+                    <li key={i}>{achievement}</li>
                   ))}
-                </AchievementsList>
-              </ExperienceCard>
-            </ExperienceItem>
+                </ul>
+
+                <div className="flex flex-wrap gap-2">
+                  {exp.tech.map((tech, i) => (
+                    <span
+                      key={i}
+                      className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-600 border border-blue-100"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           ))}
-        </Timeline>
-      </motion.div>
-    </ExperienceContainer>
+        </div>
+      </div>
+    </section>
   );
 };
 
