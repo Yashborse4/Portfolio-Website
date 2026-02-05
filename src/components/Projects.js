@@ -1,393 +1,651 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaCode, FaStar } from 'react-icons/fa';
-import { glassCard } from '../styles/mixins';
-import projectsData from '../data/projects.json';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt, FaTimes, FaServer, FaCode, FaMobile, FaBrain, FaNetworkWired, FaArrowRight, FaFolder } from 'react-icons/fa';
+import { fadeInUp, staggerContainer, modalContent, modalBackdrop } from '../styles/animations';
+import projects from '../data/projects.json';
 
-const ProjectsContainer = styled.section`
-  padding: 100px 0;
+// ========================================
+// PROJECT MODAL
+// ========================================
+const ProjectModal = ({ project, isOpen, onClose }) => {
+  if (!isOpen || !project) return null;
+
+  return (
+    <AnimatePresence>
+      <ModalOverlay
+        variants={modalBackdrop}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        onClick={onClose}
+      >
+        <ModalContent
+          variants={modalContent}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <CloseButton onClick={onClose}>
+            <FaTimes />
+          </CloseButton>
+
+          <ModalHeaderWrapper>
+            {/* Simple solid header instead of gradient */}
+            <ModalTitle>{project.title}</ModalTitle>
+            <ModalCategory>{project.category}</ModalCategory>
+          </ModalHeaderWrapper>
+
+          <ModalBody>
+            <ModalDescription>{project.description}</ModalDescription>
+
+            <SectionLabel>Technology Stack</SectionLabel>
+            <TechGrid>
+              {project.technologies.map((tech) => (
+                <TechBadge key={tech}>{tech}</TechBadge>
+              ))}
+            </TechGrid>
+
+            {project.features && (
+              <>
+                <SectionLabel>Key Features</SectionLabel>
+                <FeatureList>
+                  {project.features.map((feature, idx) => (
+                    <FeatureItem key={idx}>
+                      <span className="bullet">•</span> {feature}
+                    </FeatureItem>
+                  ))}
+                </FeatureList>
+              </>
+            )}
+
+            <ActionButtons>
+              {project.githubUrl && (
+                <ActionButton href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                  <FaGithub /> Source Code
+                </ActionButton>
+              )}
+              {project.liveUrl && project.liveUrl !== '#' && (
+                <ActionButton href={project.liveUrl} target="_blank" rel="noopener noreferrer" $primary>
+                  <FaExternalLinkAlt /> Live Demo
+                </ActionButton>
+              )}
+            </ActionButtons>
+          </ModalBody>
+        </ModalContent>
+      </ModalOverlay>
+    </AnimatePresence>
+  );
+};
+
+// ========================================
+// COMPONENTS
+// ========================================
+
+const CategoryIcon = ({ category }) => {
+  const icons = {
+    'Backend API': FaServer,
+    'Web Application': FaCode,
+    'Mobile App': FaMobile,
+    'AI/ML Application': FaBrain,
+    'Network Utility': FaNetworkWired,
+  };
+  const Icon = icons[category] || FaFolder;
+  return <Icon />;
+};
+
+const SpotlightProject = ({ project, onClick }) => (
+  <SpotlightContainer
+    layoutId={`project-${project.id}`}
+    onClick={() => onClick(project)}
+    whileHover={{ y: -5 }}
+    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  >
+    <SpotlightInfo>
+      <SpotlightTag>Flagship Project</SpotlightTag>
+      <SpotlightTitle>{project.title}</SpotlightTitle>
+      <SpotlightDesc>{project.description}</SpotlightDesc>
+
+      <TechStackInline>
+        {project.technologies.slice(0, 4).map(tech => (
+          <TechDot key={tech}>{tech}</TechDot>
+        ))}
+      </TechStackInline>
+
+      <SpotlightButton>
+        View Case Study <FaArrowRight />
+      </SpotlightButton>
+    </SpotlightInfo>
+
+    <SpotlightImageWrapper>
+      {project.image ? (
+        <SpotlightImage src={project.image} alt={project.title} />
+      ) : (
+        <VisualPlaceholder>
+          <CategoryIcon category={project.category} />
+        </VisualPlaceholder>
+      )}
+
+      {/* Decorative Floating Element */}
+      <FloatingBadge className="badge-1" animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity }}>
+        <FaCode /> Full Stack
+      </FloatingBadge>
+    </SpotlightImageWrapper>
+  </SpotlightContainer>
+);
+
+const ProjectCard = ({ project, onClick }) => (
+  <CardContainer
+    layoutId={`project-${project.id}`}
+    onClick={() => onClick(project)}
+    whileHover={{ y: -8 }}
+    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+  >
+    {project.image ? (
+      <CardImage src={project.image} alt={project.title} />
+    ) : (
+      <CardIconWrapper>
+        <CategoryIcon category={project.category} />
+      </CardIconWrapper>
+    )}
+
+    <CardContent>
+      <CardCategory>{project.category}</CardCategory>
+      <CardTitle>{project.title}</CardTitle>
+      <CardDesc>{project.description}</CardDesc>
+      <CardLink>Read More <FaArrowRight /></CardLink>
+    </CardContent>
+  </CardContainer>
+);
+
+const Projects = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // Flagship: Sell-the-old-Car (ID 6)
+  const flagshipProject = projects.find(p => p.id === 6);
+  const featuredProjects = projects.filter(p => p.featured && p.id !== 6);
+
+  return (
+    <SectionContainer id="projects">
+      <ContentWrapper>
+        <SectionHeader variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <SectionTitle>
+            <span className="accent">Selected</span> Works
+          </SectionTitle>
+          <SectionSubtitle>
+            A curated selection of projects demonstrating full-stack engineering excellence.
+          </SectionSubtitle>
+        </SectionHeader>
+
+        <LayoutGrid variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          {/* Spotlight Section */}
+          {flagshipProject && (
+            <div variants={fadeInUp}>
+              <SpotlightProject project={flagshipProject} onClick={setSelectedProject} />
+            </div>
+          )}
+
+          {/* Featured Grid */}
+          <FeaturedGrid variants={fadeInUp}>
+            {featuredProjects.map(project => (
+              <ProjectCard key={project.id} project={project} onClick={setSelectedProject} />
+            ))}
+          </FeaturedGrid>
+        </LayoutGrid>
+
+        {/* Modal */}
+        <ProjectModal
+          project={selectedProject}
+          isOpen={!!selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      </ContentWrapper>
+    </SectionContainer>
+  );
+};
+
+// ========================================
+// STYLES
+// ========================================
+
+const SectionContainer = styled.section`
+  padding: 6rem 0;
+  background: ${({ theme }) => theme.colors.background};
+  position: relative;
+`;
+
+const ContentWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding: 0 2rem;
   
   @media (max-width: 768px) {
-    padding: 80px 1rem;
+    padding: 0 1.5rem;
   }
 `;
 
-const SectionTitle = styled(motion.h2)`
+const SectionHeader = styled(motion.div)`
+  margin-bottom: 4rem;
+  text-align: center; // Center aligned for cleaner look
+`;
+
+const SectionTitle = styled.h2`
   font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: 3rem;
   font-weight: 700;
-  text-align: center;
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.text}, ${({ theme }) => theme.colors.primary});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
-const SectionSubtitle = styled(motion.p)`
-  text-align: center;
-  font-size: 1.125rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 3rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-`;
-
-const FilterContainer = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-`;
-
-const FilterButton = styled(motion.button)`
-  background: ${({ active, theme }) => 
-    active ? theme.colors.primary : 'transparent'
-  };
-  color: ${({ active, theme }) => 
-    active ? 'white' : theme.colors.textSecondary
-  };
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  padding: 0.5rem 1.5rem;
-  border-radius: 25px;
-  font-family: ${({ theme }) => theme.fonts.primary};
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
   
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    transform: translateY(-2px);
+  .accent {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 2.25rem;
   }
 `;
 
-const ProjectsGrid = styled.div`
+const SectionSubtitle = styled.p`
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const LayoutGrid = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+`;
+
+// Spotlight Styles
+const SpotlightContainer = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05); // Subtle shadow
+  cursor: pointer;
+  min-height: 400px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+`;
+
+const SpotlightInfo = styled.div`
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  @media (max-width: 968px) {
+    padding: 2.5rem;
+  }
+`;
+
+const SpotlightTag = styled.span`
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+`;
+
+const SpotlightTitle = styled.h3`
+  font-size: 2.5rem;
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: 1rem;
+  line-height: 1.1;
+`;
+
+const SpotlightDesc = styled.p`
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+`;
+
+const TechStackInline = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2.5rem;
+`;
+
+const TechDot = styled.span`
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const SpotlightButton = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 600;
+    transition: gap 0.2s;
+    
+    ${SpotlightContainer}:hover & {
+        gap: 0.8rem;
+        color: ${({ theme }) => theme.colors.primary};
+    }
+`;
+
+const SpotlightImageWrapper = styled.div`
+    background: ${({ theme }) => theme.colors.background}; // Contrast background
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    
+    @media (max-width: 968px) {
+        height: 250px;
+        order: -1;
+    }
+`;
+
+const SpotlightImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    
+    ${SpotlightContainer}:hover & {
+        transform: scale(1.05);
+    }
+`;
+
+const VisualPlaceholder = styled.div`
+    font-size: 8rem;
+    color: ${({ theme }) => theme.colors.primary}20; // Very subtle brand color
+    transform: rotate(-5deg);
+    transition: transform 0.5s ease;
+    
+    ${SpotlightContainer}:hover & {
+        transform: rotate(0deg) scale(1.05);
+        color: ${({ theme }) => theme.colors.primary}30;
+    }
+`;
+
+const FloatingBadge = styled(motion.div)`
+    position: absolute;
+    background: ${({ theme }) => theme.colors.surface};
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 600;
+    bottom: 20%;
+    right: 15%;
+    z-index: 2;
+    
+    svg { color: ${({ theme }) => theme.colors.primary}; }
+`;
+
+// Card Styles
+const FeaturedGrid = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 `;
 
-const ProjectCard = styled(motion.div)`
-  ${glassCard}
-  overflow: hidden;
-  position: relative;
+const CardContainer = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 16px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  transition: border-color 0.3s, transform 0.3s;
   
-  .project-image {
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(
-      135deg,
-      ${({ theme }) => theme.colors.primary}20,
-      ${({ theme }) => theme.colors.accent}20
-    );
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary}40;
+    transform: translateY(-5px);
+  }
+`;
+
+const CardIconWrapper = styled.div`
+    width: 50px;
+    height: 50px;
+    background: ${({ theme }) => theme.colors.background};
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
-    color: ${({ theme }) => theme.colors.textMuted};
-    position: relative;
-    overflow: hidden;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        45deg,
-        ${({ theme }) => theme.colors.primary}10,
-        ${({ theme }) => theme.colors.accent}10
-      );
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-  }
-  
-  &:hover .project-image::after {
-    opacity: 1;
-  }
-  
-  .project-content {
-    padding: 1.5rem;
-  }
-  
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    gap: 1rem;
-    
-    .project-title {
-      font-family: ${({ theme }) => theme.fonts.secondary};
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: ${({ theme }) => theme.colors.text};
-      margin: 0;
-      flex: 1;
-      min-width: 0; /* Prevents flex item from overflowing */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding-right: 0.5rem; /* Add some space before the badge */
-    }
-    
-    .featured-badge {
-      background: linear-gradient(135deg, ${({ theme }) => theme.colors.accent}, ${({ theme }) => theme.colors.primary});
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 15px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      flex-shrink: 0; /* Prevents the badge from shrinking */
-    }
-  }
-  
-  .project-description {
-    color: ${({ theme }) => theme.colors.textSecondary};
-    font-size: 0.875rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-  
-  .project-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
-  }
-  
-  .project-links {
+`;
+
+const CardImage = styled.img`
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+`;
+
+const CardContent = styled.div`
     display: flex;
-    gap: 1rem;
-  }
+    flex-direction: column;
+    width: 100%;
 `;
 
-const TechTag = styled.span`
-  background: ${({ theme }) => theme.colors.primaryGlass};
-  color: ${({ theme }) => theme.colors.primary};
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid ${({ theme }) => theme.colors.primary}30;
+const CardCategory = styled.span`
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.colors.textSecondary};
+    margin-bottom: 0.5rem;
+    font-weight: 600;
 `;
 
-const ProjectLink = styled(motion.a)`
-  display: inline-flex;
+const CardTitle = styled.h4`
+    font-size: 1.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+`;
+
+const CardDesc = styled.p`
+    color: ${({ theme }) => theme.colors.textSecondary};
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+`;
+
+const CardLink = styled.span`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: auto;
+    transition: gap 0.2s;
+    
+    ${CardContainer}:hover & {
+        gap: 0.8rem;
+        color: ${({ theme }) => theme.colors.primary};
+    }
+`;
+
+// Modal Styles (Refined)
+const ModalOverlay = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: ${({ variant, theme }) => 
-    variant === 'primary' ? theme.colors.primary : 'transparent'
-  };
-  color: ${({ variant, theme }) => 
-    variant === 'primary' ? 'white' : theme.colors.primary
-  };
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  border-radius: 25px;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+const ModalContent = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.surface};
+  width: 100%;
+  max-width: 800px;
+  border-radius: 20px;
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2);
+`;
+
+const ModalHeaderWrapper = styled.div`
+  padding: 3rem 2.5rem 1.5rem 2.5rem;
+  background: ${({ theme }) => theme.colors.background};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: 0.5rem;
+`;
+
+const ModalCategory = styled.span`
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+`;
+
+const ModalBody = styled.div`
+  padding: 2.5rem;
+  overflow-y: auto;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
   
   &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    transform: translateY(-2px);
+    transform: rotate(90deg);
+    border-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
-const CategoryBadge = styled.span`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: ${({ theme }) => theme.colors.glass.backdrop};
-  backdrop-filter: blur(10px);
-  color: ${({ theme }) => theme.colors.text};
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+const ModalDescription = styled.p`
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-bottom: 2.5rem;
 `;
 
-const Projects = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+const SectionLabel = styled.h4`
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text};
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+`;
 
-  const categories = ['All', ...new Set(projectsData.map(project => project.category))];
+const TechGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2.5rem;
+`;
+
+const TechBadge = styled.span`
+  padding: 0.4rem 0.8rem;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const FeatureList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+`;
+
+const FeatureItem = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.5;
   
-  const filteredProjects = activeFilter === 'All' 
-    ? projectsData 
-    : projectsData.filter(project => project.category === activeFilter);
+  .bullet {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        duration: 0.5
-      }
-    }
-  };
+const ActionButtons = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut'
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: 'easeOut'
-      }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.9,
-      transition: {
-        duration: 0.3
-      }
-    }
-  };
-
-  return (
-    <ProjectsContainer id="projects" ref={ref}>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-      >
-        <SectionTitle variants={itemVariants}>
-          Featured Projects
-        </SectionTitle>
-        
-        <SectionSubtitle variants={itemVariants}>
-          A showcase of my recent work and personal projects
-        </SectionSubtitle>
-        
-        <FilterContainer variants={itemVariants}>
-          {categories.map((category) => (
-            <FilterButton
-              key={category}
-              active={activeFilter === category}
-              onClick={() => setActiveFilter(category)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category}
-            </FilterButton>
-          ))}
-        </FilterContainer>
-        
-        <ProjectsGrid>
-          <AnimatePresence mode="wait">
-            {filteredProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                whileHover={{ 
-                  y: -10,
-                  transition: { type: 'spring', stiffness: 300, damping: 10 }
-                }}
-                layout
-              >
-                <CategoryBadge>{project.category}</CategoryBadge>
-                
-                <div className="project-image">
-                  <FaCode />
-                </div>
-                
-                <div className="project-content">
-                  <div className="project-header">
-                    <h3 className="project-title">{project.title}</h3>
-                    {project.featured && (
-                      <div className="featured-badge">
-                        <FaStar />
-                        Featured
-                      </div>
-                    )}
-                  </div>
-                  
-                  <p className="project-description">{project.description}</p>
-                  
-                  <div className="project-tech">
-                    {project.technologies.map((tech, index) => (
-                      <TechTag key={index}>{tech}</TechTag>
-                    ))}
-                  </div>
-                  
-                  <div className="project-links">
-                    {project.githubUrl && (
-                      <ProjectLink
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <FaGithub />
-                        Code
-                      </ProjectLink>
-                    )}
-                    {project.liveUrl && (
-                      <ProjectLink
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="primary"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <FaExternalLinkAlt />
-                        Live Demo
-                      </ProjectLink>
-                    )}
-                  </div>
-                </div>
-              </ProjectCard>
-            ))}
-          </AnimatePresence>
-        </ProjectsGrid>
-      </motion.div>
-    </ProjectsContainer>
-  );
-};
+const ActionButton = styled.a`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  
+  ${({ $primary, theme }) => $primary ? `
+    background: ${theme.colors.primary};
+    color: white;
+    box-shadow: 0 4px 15px ${theme.colors.primaryGlass};
+    &:hover { opacity: 0.9; transform: translateY(-2px); }
+  ` : `
+    background: ${theme.colors.background};
+    color: ${theme.colors.text};
+    border: 1px solid ${theme.colors.border};
+    &:hover { border-color: ${theme.colors.text}; transform: translateY(-2px); }
+  `}
+`;
 
 export default Projects;

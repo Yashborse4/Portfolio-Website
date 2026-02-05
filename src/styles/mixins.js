@@ -112,6 +112,72 @@ export const glassButton = css`
   }
 `;
 
+// Premium 3D Glassmorphism Effects
+export const glass3D = css`
+  ${glass}
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &:hover {
+    transform: translateY(-8px) rotateX(5deg) scale(1.02);
+    box-shadow: 
+      ${({ theme }) => theme.colors.glass.shadow},
+      0 20px 40px -20px ${({ theme }) => theme.colors.primary}40,
+      0 0 60px -30px ${({ theme }) => theme.colors.accent}30;
+  }
+`;
+
+export const glassFloat = css`
+  ${glass}
+  animation: float 6s ease-in-out infinite;
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+`;
+
+export const glassProfile = css`
+  ${glass}
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, 
+      ${({ theme }) => theme.colors.primary}, 
+      ${({ theme }) => theme.colors.accent});
+    border-radius: 50%;
+    z-index: -1;
+    animation: rotate-border 4s linear infinite;
+  }
+  
+  @keyframes rotate-border {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+export const glassPremium = css`
+  background: linear-gradient(
+    135deg,
+    ${({ theme }) => theme.colors.glass.backdrop} 0%,
+    ${({ theme }) => theme.colors.primaryGlass} 50%,
+    ${({ theme }) => theme.colors.glass.backdrop} 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+  box-shadow: 
+    ${({ theme }) => theme.colors.glass.shadow},
+    inset 0 1px 1px ${({ theme }) => theme.colors.glass.border};
+  border-radius: var(--radius-xl);
+`;
+
 // Legacy card mixin (updated with glassmorphism)
 export const card = css`
   ${glassCard}
@@ -155,6 +221,14 @@ export const responsiveText = {
   `
 };
 
+export const glassMatte = css`
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+`;
+
 const mixins = {
   mediaQuery,
   flexCenter,
@@ -167,6 +241,11 @@ const mixins = {
   glassCard,
   glassSurface,
   glassButton,
+  glass3D,
+  glassFloat,
+  glassProfile,
+  glassPremium,
+  glassMatte,
   card,
   sectionPadding,
   truncateText,

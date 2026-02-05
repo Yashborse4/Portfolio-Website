@@ -232,12 +232,12 @@ const BackToTop = styled(motion.button)`
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   const socialLinks = [
     { icon: FaGithub, href: 'https://github.com/yashborse', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://linkedin.com/in/yashborse', label: 'LinkedIn' },
     { icon: FaTwitter, href: 'https://twitter.com/yashborse', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:yashborse.dev@gmail.com', label: 'Email' }
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' }
   ];
 
   const quickLinks = [
@@ -284,7 +284,7 @@ const Footer = () => {
             <BrandSection variants={itemVariants}>
               <h2 className="brand-name">Yash Borse</h2>
               <p className="brand-description section-content">
-                React Native developer with 1+ year experience at HAL, specializing in 
+                React Native developer with 1+ year experience at HAL, specializing in
                 cross-platform mobile applications. Let's build something incredible together.
               </p>
               <SocialLinks>
@@ -303,7 +303,7 @@ const Footer = () => {
                 ))}
               </SocialLinks>
             </BrandSection>
-            
+
             <FooterSection variants={itemVariants}>
               <h3 className="section-title">Quick Links</h3>
               <QuickLinks>
@@ -319,13 +319,13 @@ const Footer = () => {
                 ))}
               </QuickLinks>
             </FooterSection>
-            
+
             <FooterSection variants={itemVariants}>
               <h3 className="section-title">Get In Touch</h3>
               <ContactInfo>
                 <div className="contact-item">
                   <FaEnvelope className="icon" />
-                  <a href="mailto:yashborse.dev@gmail.com">yashborse.dev@gmail.com</a>
+                  <a href="mailto:yashborse432005@gmail.com">yashborse432005@gmail.com</a>
                 </div>
                 <div className="contact-item">
                   <span>📞</span>
@@ -338,12 +338,12 @@ const Footer = () => {
               </ContactInfo>
             </FooterSection>
           </FooterMain>
-          
+
           <FooterBottom>
             <Copyright>
               © {currentYear} Yash Borse. Made with <FaHeart className="heart" /> using React
             </Copyright>
-            
+
             <ScrollLink to="hero" smooth={true} duration={800}>
               <BackToTop
                 whileHover={{ scale: 1.1 }}

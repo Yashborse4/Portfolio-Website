@@ -247,7 +247,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -255,8 +255,8 @@ const Contact = () => {
     {
       icon: FaEnvelope,
       label: 'Email',
-      value: 'yash_borse432005@gmail.com',
-      href: 'mailto:yash_borse432005@gmail.com'
+      value: 'yashborse432005@gmail.com',
+      href: 'mailto:yashborse432005@gmail.com'
     },
     {
       icon: FaPhone,
@@ -289,13 +289,13 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
       setShowSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      
+
       setTimeout(() => {
         setShowSuccess(false);
       }, 5000);
@@ -335,20 +335,20 @@ const Contact = () => {
         <SectionTitle variants={itemVariants}>
           Get In Touch
         </SectionTitle>
-        
+
         <SectionSubtitle variants={itemVariants}>
           Let's discuss your next project or just say hello!
         </SectionSubtitle>
-        
+
         <ContactContent>
           <ContactInfo variants={itemVariants}>
             <h3 className="info-title">Let's Connect</h3>
             <p className="info-description">
-              I'm always interested in hearing about new opportunities and 
-              exciting projects. Whether you have a question or just want to 
+              I'm always interested in hearing about new opportunities and
+              exciting projects. Whether you have a question or just want to
               say hi, I'll try my best to get back to you!
             </p>
-            
+
             <ContactInfoList>
               {contactInfo.map((info, index) => (
                 <ContactInfoItem
@@ -368,7 +368,7 @@ const Contact = () => {
                 </ContactInfoItem>
               ))}
             </ContactInfoList>
-            
+
             <SocialLinks>
               <div className="social-title">Follow Me</div>
               <div className="social-list">
@@ -388,7 +388,7 @@ const Contact = () => {
               </div>
             </SocialLinks>
           </ContactInfo>
-          
+
           <ContactForm
             variants={itemVariants}
             onSubmit={handleSubmit}
@@ -396,7 +396,7 @@ const Contact = () => {
             transition={{ type: 'spring', stiffness: 300, damping: 10 }}
           >
             <FormTitle>Send Message</FormTitle>
-            
+
             <FormGroup>
               <label htmlFor="name">Name *</label>
               <input
@@ -409,7 +409,7 @@ const Contact = () => {
                 required
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label htmlFor="email">Email *</label>
               <input
@@ -418,11 +418,11 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="yash_borse432005@gmail.com"
+                placeholder="yashborse432005@gmail.com"
                 required
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label htmlFor="subject">Subject *</label>
               <input
@@ -435,7 +435,7 @@ const Contact = () => {
                 required
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label htmlFor="message">Message *</label>
               <textarea
@@ -447,7 +447,7 @@ const Contact = () => {
                 required
               />
             </FormGroup>
-            
+
             <SubmitButton
               type="submit"
               disabled={isSubmitting}
@@ -471,7 +471,7 @@ const Contact = () => {
                 </>
               )}
             </SubmitButton>
-            
+
             {showSuccess && (
               <SuccessMessage
                 initial={{ opacity: 0, y: 20 }}

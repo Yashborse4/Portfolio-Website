@@ -1,13 +1,22 @@
 import React, { useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion, useInView } from 'framer-motion';
-import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
-import { glassCard } from '../styles/mixins';
+import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaCheckCircle, FaRocket } from 'react-icons/fa';
+import { glassCard, glassPremium } from '../styles/mixins';
+import { staggerContainer, fadeInUp, timelineIconVariants } from '../styles/animations';
 import jobsData from '../data/jobs.json';
+
+// ========================================
+// STYLED COMPONENTS
+// ========================================
+const pulse = keyframes`
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+`;
 
 const ExperienceContainer = styled.section`
   padding: 100px 0;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -46,110 +55,127 @@ const Timeline = styled.div`
     content: '';
     position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
+    left: 30px;
+    width: 3px;
     height: 100%;
     background: linear-gradient(
       180deg,
       ${({ theme }) => theme.colors.primary},
       ${({ theme }) => theme.colors.accent}
     );
+    border-radius: 3px;
     
-    @media (max-width: 768px) {
-      left: 30px;
+    @media (min-width: 768px) {
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 `;
 
 const ExperienceItem = styled(motion.div)`
   display: flex;
-  align-items: center;
-  margin-bottom: 4rem;
+  align-items: flex-start;
+  margin-bottom: 3rem;
   position: relative;
+  padding-left: 80px;
   
-  &:nth-child(even) {
-    flex-direction: row-reverse;
+  @media (min-width: 768px) {
+    padding-left: 0;
     
-    .content {
-      margin-right: 2rem;
-      margin-left: 0;
+    &:nth-child(odd) {
+      padding-right: calc(50% + 50px);
       
-      @media (max-width: 768px) {
-        margin-right: 0;
-        margin-left: 2rem;
+      .card {
+        text-align: right;
+      }
+      
+      .meta {
+        justify-content: flex-end;
       }
     }
     
-    @media (max-width: 768px) {
-      flex-direction: row;
+    &:nth-child(even) {
+      padding-left: calc(50% + 50px);
     }
-  }
-  
-  &:nth-child(odd) .content {
-    margin-left: 2rem;
-    
-    @media (max-width: 768px) {
-      margin-left: 2rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
   }
 `;
 
 const TimelineIcon = styled(motion.div)`
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 60px;
+  left: 10px;
+  width: 44px;
+  height: 44px;
   background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1rem;
   z-index: 2;
-  box-shadow: ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0 0 20px ${({ theme }) => theme.colors.primary}50;
   
-  @media (max-width: 768px) {
-    left: 30px;
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-`;
+  @media (min-width: 768px) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+  }`;
 
 const ExperienceCard = styled(motion.div)`
-  ${glassCard}
-  flex: 1;
-  max-width: 45%;
-  padding: 2rem;
+  ${glassPremium}
+  padding: 1.5rem;
   position: relative;
+  width: 100%;
   
-  @media (max-width: 768px) {
-    max-width: none;
-    flex: none;
-    width: calc(100% - 6rem);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
+    left: -20px;
+    
+    @media (min-width: 768px) {
+      ${ExperienceItem}:nth-child(odd) & {
+        left: auto;
+        right: -20px;
+      }
+      
+      ${ExperienceItem}:nth-child(even) & {
+        left: -20px;
+      }
+    }
   }
   
   .company {
     font-family: ${({ theme }) => theme.fonts.secondary};
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .current-badge {
+    background: linear-gradient(135deg, ${({ theme }) => theme.colors.success}, ${({ theme }) => theme.colors.accent});
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    animation: ${pulse} 2s ease-in-out infinite;
   }
   
   .position {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
   
   .meta {
@@ -161,32 +187,33 @@ const ExperienceCard = styled(motion.div)`
     .meta-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
+      gap: 0.4rem;
+      font-size: 0.8rem;
       color: ${({ theme }) => theme.colors.textSecondary};
       
       .icon {
         color: ${({ theme }) => theme.colors.primary};
+        font-size: 0.75rem;
       }
     }
   }
   
   .description {
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1.6;
     color: ${({ theme }) => theme.colors.textSecondary};
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
   }
 `;
 
 const TechnologiesContainer = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   
   .technologies-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -194,26 +221,32 @@ const TechnologiesContainer = styled.div`
   .technologies-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    
+    @media (min-width: 768px) {
+      ${ExperienceItem}:nth-child(odd) & {
+        justify-content: flex-end;
+      }
+    }
   }
 `;
 
-const TechTag = styled.span`
+const TechTag = styled(motion.span)`
   background: ${({ theme }) => theme.colors.primaryGlass};
   color: ${({ theme }) => theme.colors.primary};
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
   font-weight: 500;
   border: 1px solid ${({ theme }) => theme.colors.primary}30;
 `;
 
 const AchievementsList = styled.div`
   .achievements-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -222,8 +255,8 @@ const AchievementsList = styled.div`
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
     color: ${({ theme }) => theme.colors.textSecondary};
     
     &:last-child {
@@ -232,86 +265,69 @@ const AchievementsList = styled.div`
     
     .icon {
       color: ${({ theme }) => theme.colors.success};
-      margin-top: 0.125rem;
+      margin-top: 0.15rem;
       flex-shrink: 0;
+      font-size: 0.75rem;
+    }
+    
+    @media (min-width: 768px) {
+      ${ExperienceItem}:nth-child(odd) & {
+        flex-direction: row-reverse;
+        text-align: right;
+      }
     }
   }
 `;
 
+// ========================================
+// EXPERIENCE COMPONENT
+// ========================================
 const Experience = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        duration: 0.5
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut'
-      }
-    }
-  };
-
-  const iconVariants = {
-    hidden: { scale: 0, rotate: -180 },
-    visible: {
-      scale: 1,
-      rotate: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 200,
-        damping: 10
-      }
-    }
-  };
-
   return (
     <ExperienceContainer id="experience" ref={ref}>
       <motion.div
-        variants={containerVariants}
+        variants={staggerContainer}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        <SectionTitle variants={itemVariants}>
+        <SectionTitle variants={fadeInUp}>
           Professional Experience
         </SectionTitle>
-        
-        <SectionSubtitle variants={itemVariants}>
+
+        <SectionSubtitle variants={fadeInUp}>
           A journey through my professional growth and achievements
         </SectionSubtitle>
-        
+
         <Timeline>
           {jobsData.map((job, index) => (
-            <ExperienceItem key={job.id} variants={itemVariants}>
+            <ExperienceItem key={job.id} variants={fadeInUp}>
               <TimelineIcon
-                variants={iconVariants}
+                variants={timelineIconVariants}
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 transition={{ duration: 0.5 }}
               >
                 <FaBriefcase />
               </TimelineIcon>
-              
+
               <ExperienceCard
-                className="content"
+                className="card"
                 whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <h3 className="company">{job.company}</h3>
+                <h3 className="company">
+                  {job.company}
+                  {job.duration.includes('Present') && (
+                    <span className="current-badge">
+                      <FaRocket style={{ marginRight: '4px' }} />
+                      Current
+                    </span>
+                  )}
+                </h3>
                 <h4 className="position">{job.position}</h4>
-                
+
                 <div className="meta">
                   <div className="meta-item">
                     <FaCalendar className="icon" />
@@ -322,25 +338,38 @@ const Experience = () => {
                     <span>{job.location}</span>
                   </div>
                 </div>
-                
+
                 <p className="description">{job.description}</p>
-                
+
                 <TechnologiesContainer>
-                  <div className="technologies-label">Technologies Used</div>
+                  <div className="technologies-label">Technologies</div>
                   <div className="technologies-list">
                     {job.technologies.map((tech, techIndex) => (
-                      <TechTag key={techIndex}>{tech}</TechTag>
+                      <TechTag
+                        key={techIndex}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 + techIndex * 0.05 }}
+                      >
+                        {tech}
+                      </TechTag>
                     ))}
                   </div>
                 </TechnologiesContainer>
-                
+
                 <AchievementsList>
                   <div className="achievements-label">Key Achievements</div>
                   {job.achievements.map((achievement, achIndex) => (
-                    <div key={achIndex} className="achievement">
+                    <motion.div
+                      key={achIndex}
+                      className="achievement"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.7 + achIndex * 0.1 }}
+                    >
                       <FaCheckCircle className="icon" />
                       <span>{achievement}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </AchievementsList>
               </ExperienceCard>

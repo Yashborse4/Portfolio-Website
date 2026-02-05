@@ -1,9 +1,61 @@
 import React, { useRef } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion, useInView } from 'framer-motion';
-import { FaGraduationCap, FaCertificate, FaCalendar, FaMapMarkerAlt, FaMedal, FaChartLine } from 'react-icons/fa';
-import { glassCard } from '../styles/mixins';
+import { FaGraduationCap, FaCertificate, FaAward, FaCalendar, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
+import { SiAmazonwebservices, SiGooglecloud } from 'react-icons/si';
+import { glassCard, glassPremium } from '../styles/mixins';
+import { staggerContainer, fadeInUp, scaleIn } from '../styles/animations';
 import educationData from '../data/education.json';
+
+// ========================================
+// ANIMATED CIRCULAR PROGRESS
+// ========================================
+const CircularProgress = ({ value, size = 80, strokeWidth = 6 }) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (parseFloat(value) / 100) * circumference;
+
+  return (
+    <ProgressSvg width={size} height={size}>
+      <circle
+        className="bg"
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        strokeWidth={strokeWidth}
+      />
+      <motion.circle
+        className="progress"
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        strokeWidth={strokeWidth}
+        strokeDasharray={circumference}
+        initial={{ strokeDashoffset: circumference }}
+        whileInView={{ strokeDashoffset: offset }}
+        transition={{ duration: 1.5, ease: 'easeOut' }}
+        viewport={{ once: true }}
+      />
+      <text
+        x="50%"
+        y="50%"
+        textAnchor="middle"
+        dy="0.3em"
+        className="value"
+      >
+        {value}
+      </text>
+    </ProgressSvg>
+  );
+};
+
+// ========================================
+// STYLED COMPONENTS
+// ========================================
+const float = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+`;
 
 const EducationContainer = styled.section`
   padding: 100px 0;
@@ -33,27 +85,62 @@ const SectionSubtitle = styled(motion.p)`
   text-align: center;
   font-size: 1.125rem;
   color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
 `;
 
+const TabContainer = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+`;
+
+const Tab = styled(motion.button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-family: ${({ theme }) => theme.fonts.primary};
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  
+  ${({ $active, theme }) => $active ? `
+    background: linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent});
+    color: white;
+    box-shadow: 0 5px 20px ${theme.colors.primary}40;
+  ` : `
+    background: ${theme.colors.glass.backdrop};
+    color: ${theme.colors.textSecondary};
+    border: 1px solid ${theme.colors.glass.border};
+    
+    &:hover {
+      background: ${theme.colors.glass.backdropHover};
+      color: ${theme.colors.text};
+    }
+  `}
+`;
+
 const EducationGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
   
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 `;
 
 const EducationCard = styled(motion.div)`
-  ${glassCard}
-  padding: 2rem;
+  ${glassPremium}
+  padding: 1.5rem;
   position: relative;
   overflow: hidden;
   
@@ -64,371 +151,297 @@ const EducationCard = styled(motion.div)`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
+    background: linear-gradient(90deg, 
+      ${({ $type, theme }) =>
+    $type === 'degree' ? theme.colors.primary :
+      $type === 'diploma' ? theme.colors.accent :
+        theme.colors.success
+  },
+      ${({ theme }) => theme.colors.accent}
+    );
+  }
+`;
+
+const CardHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const IconWrapper = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, 
+    ${({ theme }) => theme.colors.primary}20, 
+    ${({ theme }) => theme.colors.accent}20
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.primary};
+  flex-shrink: 0;
+`;
+
+const CardInfo = styled.div`
+  flex: 1;
+  
+  .institution {
+    font-family: ${({ theme }) => theme.fonts.secondary};
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.text};
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
   }
   
-  .education-header {
+  .degree {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.primary};
+    margin-bottom: 0.5rem;
+  }
+  
+  .meta {
     display: flex;
-    align-items: flex-start;
     gap: 1rem;
-    margin-bottom: 1.5rem;
-    
-    .icon-container {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-    
-    .education-info {
-      flex: 1;
-      
-      .degree {
-        font-family: ${({ theme }) => theme.fonts.secondary};
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: ${({ theme }) => theme.colors.text};
-        margin-bottom: 0.5rem;
-        line-height: 1.2;
-      }
-      
-      .institution {
-        font-size: 1rem;
-        color: ${({ theme }) => theme.colors.primary};
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-    }
-  }
-  
-  .education-meta {
-    display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
     
     .meta-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
+      gap: 0.3rem;
+      font-size: 0.75rem;
       color: ${({ theme }) => theme.colors.textSecondary};
       
       .icon {
         color: ${({ theme }) => theme.colors.primary};
-        flex-shrink: 0;
-      }
-    }
-  }
-  
-  .percentage-container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: ${({ theme }) => theme.colors.primaryGlass};
-    border-radius: 12px;
-    border: 1px solid ${({ theme }) => theme.colors.primary}30;
-    
-    .percentage-icon {
-      font-size: 1.5rem;
-      color: ${({ theme }) => theme.colors.primary};
-    }
-    
-    .percentage-info {
-      .percentage-label {
-        font-size: 0.875rem;
-        color: ${({ theme }) => theme.colors.textMuted};
-        margin-bottom: 0.25rem;
-      }
-      
-      .percentage-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: ${({ theme }) => theme.colors.primary};
-        font-family: ${({ theme }) => theme.fonts.secondary};
-      }
-    }
-  }
-  
-  .description {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: ${({ theme }) => theme.colors.textSecondary};
-    margin-bottom: 1.5rem;
-  }
-  
-  .coursework-section {
-    margin-bottom: 1.5rem;
-    
-    .section-title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: ${({ theme }) => theme.colors.text};
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .coursework-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    
-    .coursework-item {
-      background: ${({ theme }) => theme.colors.glass.backdrop};
-      color: ${({ theme }) => theme.colors.textSecondary};
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      border: 1px solid ${({ theme }) => theme.colors.glass.border};
-    }
-  }
-  
-  .achievements-section {
-    .section-title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: ${({ theme }) => theme.colors.text};
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .achievement {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-      color: ${({ theme }) => theme.colors.textSecondary};
-      
-      &:last-child {
-        margin-bottom: 0;
-      }
-      
-      .achievement-icon {
-        color: ${({ theme }) => theme.colors.success};
-        margin-top: 0.125rem;
-        flex-shrink: 0;
+        font-size: 0.7rem;
       }
     }
   }
 `;
 
-const CertificationsSection = styled.div`
-  margin-top: 3rem;
+const ScoreSection = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 `;
 
-const CertificationsTitle = styled(motion.h3)`
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: 1.875rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const CertificationsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+const ProgressSvg = styled.svg`
+  transform: rotate(-90deg);
   
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const CertificationCard = styled(motion.div)`
-  ${glassCard}
-  padding: 1.5rem;
-  text-align: center;
-  
-  .cert-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.accent}, ${({ theme }) => theme.colors.primary});
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    margin: 0 auto 1rem;
+  .bg {
+    fill: none;
+    stroke: ${({ theme }) => theme.colors.glass.border};
   }
   
-  .cert-title {
+  .progress {
+    fill: none;
+    stroke: url(#gradient);
+    stroke-linecap: round;
+  }
+  
+  .value {
+    fill: ${({ theme }) => theme.colors.text};
     font-family: ${({ theme }) => theme.fonts.secondary};
-    font-size: 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transform: rotate(90deg);
+    transform-origin: center;
+  }
+  
+  defs {
+    linearGradient {
+      stop:first-child {
+        stop-color: ${({ theme }) => theme.colors.primary};
+      }
+      stop:last-child {
+        stop-color: ${({ theme }) => theme.colors.accent};
+      }
+    }
+  }
+`;
+
+const Description = styled.p`
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-bottom: 1rem;
+`;
+
+const AchievementsList = styled.div`
+  .label {
+    font-size: 0.7rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-  }
-  
-  .cert-institution {
-    font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.primary};
-    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 0.5rem;
   }
   
-  .cert-year {
-    font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.textMuted};
+  .achievement {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+    color: ${({ theme }) => theme.colors.textSecondary};
+    
+    .icon {
+      color: ${({ theme }) => theme.colors.success};
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+      font-size: 0.7rem;
+    }
   }
 `;
 
+const CertBadge = styled(motion.div)`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  animation: ${float} 3s ease-in-out infinite;
+`;
+
+// ========================================
+// EDUCATION COMPONENT
+// ========================================
 const Education = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [filter, setFilter] = React.useState('all');
 
-  // Filter main education (degree and diploma) and certifications
-  const mainEducation = educationData.filter(item => item.type === 'degree' || item.type === 'diploma');
+  const degrees = educationData.filter(item => item.type === 'degree' || item.type === 'diploma');
   const certifications = educationData.filter(item => item.type === 'certification');
 
-  const getEducationIcon = (type) => {
-    return type === 'degree' ? FaGraduationCap : FaCertificate;
-  };
+  const displayData = filter === 'all' ? educationData :
+    filter === 'degrees' ? degrees : certifications;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        duration: 0.5
-      }
+  const getIcon = (type, institution) => {
+    if (type === 'certification') {
+      if (institution.includes('AWS')) return SiAmazonwebservices;
+      if (institution.includes('Google')) return SiGooglecloud;
+      return FaCertificate;
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut'
-      }
-    }
+    return FaGraduationCap;
   };
 
   return (
     <EducationContainer id="education" ref={ref}>
+      <svg width="0" height="0">
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <motion.div
-        variants={containerVariants}
+        variants={staggerContainer}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        <SectionTitle variants={itemVariants}>
-          Education
+        <SectionTitle variants={fadeInUp}>
+          Education & Certifications
         </SectionTitle>
-        
-        <SectionSubtitle variants={itemVariants}>
-          Academic foundation and continuous learning journey
+
+        <SectionSubtitle variants={fadeInUp}>
+          My academic journey and professional credentials
         </SectionSubtitle>
-        
+
+        <TabContainer variants={fadeInUp}>
+          <Tab $active={filter === 'all'} onClick={() => setFilter('all')}
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <FaAward /> All
+          </Tab>
+          <Tab $active={filter === 'degrees'} onClick={() => setFilter('degrees')}
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <FaGraduationCap /> Degrees
+          </Tab>
+          <Tab $active={filter === 'certifications'} onClick={() => setFilter('certifications')}
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <FaCertificate /> Certifications
+          </Tab>
+        </TabContainer>
+
         <EducationGrid>
-          {mainEducation.map((edu) => {
-            const IconComponent = getEducationIcon(edu.type);
+          {displayData.map((item, index) => {
+            const Icon = getIcon(item.type, item.institution);
+
             return (
               <EducationCard
-                key={edu.id}
-                variants={itemVariants}
-                whileHover={{ y: -5, scale: 1.02 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+                key={item.id + '-' + index}
+                $type={item.type}
+                variants={scaleIn}
+                whileHover={{ scale: 1.02, y: -5 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
               >
-                <div className="education-header">
-                  <div className="icon-container">
-                    <IconComponent />
-                  </div>
-                  <div className="education-info">
-                    <h3 className="degree">{edu.degree}</h3>
-                    <div className="institution">{edu.institution}</div>
-                  </div>
-                </div>
-                
-                <div className="education-meta">
-                  <div className="meta-item">
-                    <FaCalendar className="icon" />
-                    <span>{edu.duration}</span>
-                  </div>
-                  <div className="meta-item">
-                    <FaMapMarkerAlt className="icon" />
-                    <span>{edu.location}</span>
-                  </div>
-                </div>
-                
-                {edu.percentage && (
-                  <div className="percentage-container">
-                    <FaChartLine className="percentage-icon" />
-                    <div className="percentage-info">
-                      <div className="percentage-label">Academic Performance</div>
-                      <div className="percentage-value">{edu.percentage}</div>
-                    </div>
-                  </div>
+                {item.type === 'certification' && (
+                  <CertBadge>
+                    {item.institution.includes('AWS') ? '🏆' :
+                      item.institution.includes('Google') ? '☁️' : '📜'}
+                  </CertBadge>
                 )}
-                
-                <p className="description">{edu.description}</p>
-                
-                <div className="coursework-section">
-                  <div className="section-title">Key Coursework</div>
-                  <div className="coursework-list">
-                    {edu.relevantCoursework.slice(0, 6).map((course, index) => (
-                      <span key={index} className="coursework-item">{course}</span>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="achievements-section">
-                  <div className="section-title">Achievements</div>
-                  {edu.achievements.map((achievement, index) => (
-                    <div key={index} className="achievement">
-                      <FaMedal className="achievement-icon" />
-                      <span>{achievement}</span>
+
+                <CardHeader>
+                  <IconWrapper>
+                    <Icon />
+                  </IconWrapper>
+                  <CardInfo>
+                    <h3 className="institution">{item.institution}</h3>
+                    <h4 className="degree">{item.degree}</h4>
+                    <div className="meta">
+                      <div className="meta-item">
+                        <FaCalendar className="icon" />
+                        <span>{item.duration}</span>
+                      </div>
+                      {item.location && (
+                        <div className="meta-item">
+                          <FaMapMarkerAlt className="icon" />
+                          <span>{item.location}</span>
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  </CardInfo>
+                </CardHeader>
+
+                {item.percentage && (
+                  <ScoreSection>
+                    <CircularProgress value={item.percentage.replace('%', '')} />
+                  </ScoreSection>
+                )}
+
+                {item.description && (
+                  <Description>{item.description}</Description>
+                )}
+
+                {item.achievements && item.achievements.length > 0 && (
+                  <AchievementsList>
+                    <div className="label">Achievements</div>
+                    {item.achievements.slice(0, 3).map((achievement, achIndex) => (
+                      <motion.div
+                        key={achIndex}
+                        className="achievement"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 + achIndex * 0.1 }}
+                        viewport={{ once: true }}
+                      >
+                        <FaCheckCircle className="icon" />
+                        <span>{achievement}</span>
+                      </motion.div>
+                    ))}
+                  </AchievementsList>
+                )}
               </EducationCard>
             );
           })}
         </EducationGrid>
-        
-        {certifications.length > 0 && (
-          <CertificationsSection>
-            <CertificationsTitle variants={itemVariants}>
-              Certifications
-            </CertificationsTitle>
-            
-            <CertificationsGrid>
-              {certifications.map((cert, index) => (
-                <CertificationCard
-                  key={cert.id}
-                  variants={itemVariants}
-                  whileHover={{ y: -3, scale: 1.05 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 10 }}
-                >
-                  <div className="cert-icon">
-                    <FaCertificate />
-                  </div>
-                  <h4 className="cert-title">{cert.degree}</h4>
-                  <div className="cert-institution">{cert.institution}</div>
-                  <div className="cert-year">{cert.duration}</div>
-                </CertificationCard>
-              ))}
-            </CertificationsGrid>
-          </CertificationsSection>
-        )}
       </motion.div>
     </EducationContainer>
   );

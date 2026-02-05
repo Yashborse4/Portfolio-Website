@@ -1,31 +1,31 @@
 export const lightTheme = {
   colors: {
-    // Base colors - Clean white theme
-    background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-    backgroundSolid: '#ffffff',
-    surface: 'rgba(248, 250, 252, 0.9)',
-    surfaceHover: 'rgba(241, 245, 249, 1)',
-    primary: '#3b82f6',
-    primaryGlass: 'rgba(59, 130, 246, 0.1)',
-    secondary: '#64748b',
-    secondaryGlass: 'rgba(100, 116, 139, 0.1)',
-    
+    // Base colors - Tazrin Theme (Light - Violet Polish)
+    background: '#F2F4F7', // Light Gray
+    backgroundSolid: '#F2F4F7',
+    surface: '#FFFFFF',
+    surfaceHover: '#FFFFFF',
+    primary: '#8B5CF6', // Electric Violet
+    primaryGlass: 'rgba(139, 92, 246, 0.15)',
+    secondary: '#A78BFA', // Lighter Violet (Accent)
+    secondaryGlass: 'rgba(167, 139, 250, 0.15)',
+
     // Text colors
-    text: '#1e293b',
-    textSecondary: '#475569',
-    textMuted: '#94a3b8',
-    textOnGlass: '#1e293b',
-    
+    text: '#2D3436', // Dark Slate
+    textSecondary: '#636E72', // Muted Gray
+    textMuted: '#B2BEC3',
+    textOnGlass: '#2D3436',
+
     // Interactive colors
-    accent: '#06b6d4',
-    accentGlass: 'rgba(6, 182, 212, 0.1)',
-    success: '#10b981',
-    successGlass: 'rgba(16, 185, 129, 0.1)',
-    warning: '#f59e0b',
-    warningGlass: 'rgba(245, 158, 11, 0.1)',
-    error: '#ef4444',
-    errorGlass: 'rgba(239, 68, 68, 0.1)',
-    
+    accent: '#A78BFA',
+    accentGlass: 'rgba(167, 139, 250, 0.15)',
+    success: '#00B894',
+    successGlass: 'rgba(0, 184, 148, 0.15)',
+    warning: '#FD79A8',
+    warningGlass: 'rgba(253, 121, 168, 0.15)',
+    error: '#D63031',
+    errorGlass: 'rgba(214, 48, 49, 0.15)',
+
     // Glassmorphism effects
     glass: {
       backdrop: 'rgba(255, 255, 255, 0.8)',
@@ -34,7 +34,7 @@ export const lightTheme = {
       border: 'rgba(148, 163, 184, 0.2)',
       shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
     },
-    
+
     // Legacy support
     border: 'rgba(148, 163, 184, 0.2)',
     shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
@@ -59,32 +59,32 @@ export const lightTheme = {
 
 export const darkTheme = {
   colors: {
-    // Base colors - Pure black theme
-    background: 'linear-gradient(135deg, #000000 0%, #0a0a0a 100%)',
-    backgroundSolid: '#000000',
-    surface: 'rgba(17, 17, 17, 0.95)',
-    surfaceHover: 'rgba(23, 23, 23, 1)',
-    primary: '#3b82f6',
-    primaryGlass: 'rgba(59, 130, 246, 0.15)',
-    secondary: '#64748b',
-    secondaryGlass: 'rgba(100, 116, 139, 0.15)',
-    
+    // Base colors - Tazrin Theme (Dark - Violet Polish)
+    background: '#0F172A', // Rich Slate Navy (Depth)
+    backgroundSolid: '#0F172A',
+    surface: '#1E293B', // Slate Grey (Card background)
+    surfaceHover: '#334155', // Lighter Slate for hover
+    primary: '#8B5CF6', // Electric Violet
+    primaryGlass: 'rgba(139, 92, 246, 0.15)',
+    secondary: '#A78BFA', // Lighter Violet (Accent)
+    secondaryGlass: 'rgba(167, 139, 250, 0.15)',
+
     // Text colors
-    text: '#ffffff',
-    textSecondary: '#e2e8f0',
-    textMuted: '#94a3b8',
-    textOnGlass: '#ffffff',
-    
+    text: '#F8FAFC', // Off-white for readability
+    textSecondary: '#94A3B8', // Slate 400
+    textMuted: '#64748B', // Slate 500
+    textOnGlass: '#F8FAFC',
+
     // Interactive colors
-    accent: '#06b6d4',
-    accentGlass: 'rgba(6, 182, 212, 0.15)',
-    success: '#10b981',
+    accent: '#A78BFA',
+    accentGlass: 'rgba(167, 139, 250, 0.15)',
+    success: '#10B981', // Emerald
     successGlass: 'rgba(16, 185, 129, 0.15)',
-    warning: '#f59e0b',
+    warning: '#F59E0B', // Amber
     warningGlass: 'rgba(245, 158, 11, 0.15)',
-    error: '#ef4444',
+    error: '#EF4444', // Red
     errorGlass: 'rgba(239, 68, 68, 0.15)',
-    
+
     // Glassmorphism effects
     glass: {
       backdrop: 'rgba(17, 17, 17, 0.8)',
@@ -93,7 +93,7 @@ export const darkTheme = {
       border: 'rgba(255, 255, 255, 0.1)',
       shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25)'
     },
-    
+
     // Legacy support
     border: 'rgba(255, 255, 255, 0.1)',
     shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.25)'

@@ -1,9 +1,40 @@
 [
   {
+    "id": 6,
+    "title": "Sell-the-old-Car Backend",
+    "description": "A robust backend marketplace for buying and selling used cars, featuring hybrid REST and GraphQL API architecture with enterprise-grade security and scalability.",
+    "image": "",
+    "technologies": [
+      "Java 17",
+      "Spring Boot 3.x",
+      "GraphQL",
+      "PostgreSQL",
+      "OpenSearch",
+      "Redis",
+      "Docker",
+      "JWT Authentication"
+    ],
+    "githubUrl": "https://github.com/yashborse/sell-the-old-car",
+    "liveUrl": "#",
+    "featured": true,
+    "category": "Backend API",
+    "completedDate": "2024-02-01",
+    "features": [
+      "Hybrid REST + GraphQL API architecture",
+      "JWT-based secure authentication",
+      "Real-time chat messaging system",
+      "Dealer verification workflow",
+      "Backblaze B2 media storage integration",
+      "OpenSearch full-text search engine",
+      "Redis caching for performance",
+      "Docker containerization with Compose"
+    ]
+  },
+  {
     "id": 1,
     "title": "AutoTradeX - Used Car Marketplace",
     "description": "A comprehensive e-commerce platform for buying and selling used cars with advanced search, AI-based price prediction, and secure payment processing.",
-    "image": "/assets/images/autotradex-project.jpg",
+    "image": "",
     "technologies": [
       "React Native",
       "Java ",
@@ -12,7 +43,6 @@
       "JWT Authentication",
       "GraphQL API",
       "Redux Toolkit"
-  
     ],
     "githubUrl": "https://github.com/yashborse/autotradex",
     "liveUrl": "https://autotradex-demo.vercel.app",
@@ -33,15 +63,21 @@
     "id": 2,
     "title": "Duplicate File Analyzer",
     "description": "A tool for analyzing duplicate files on a computer using Python.",
-    "image": "/assets/images/expense-manager-project.jpg",
-    "technologies": ["React Native", "SQLite", "React Navigation", "Charts", "AsyncStorage"],
+    "image": "",
+    "technologies": [
+      "React Native",
+      "SQLite",
+      "React Navigation",
+      "Charts",
+      "AsyncStorage"
+    ],
     "githubUrl": "https://github.com/yashborse/expense-manager",
     "liveUrl": "https://expo.dev/@yashborse/expense-manager",
     "featured": true,
     "category": "Mobile App",
     "completedDate": "2023-11-20",
     "features": [
-      "Alerts and notifications of duplicate files" ,
+      "Alerts and notifications of duplicate files",
       "recommend before downloading",
       "Secure local data storage",
       "Support Distrbuted Storage "
@@ -51,7 +87,7 @@
     "id": 3,
     "title": "CampusGuard - Smart Surveillance System",
     "description": "An intelligent campus security solution using computer vision for real-time monitoring, threat detection, and automated alerts.",
-    "image": "/assets/images/campusguard-project.jpg",
+    "image": "",
     "technologies": [
       "Python",
       "OpenCV",
@@ -80,7 +116,7 @@
     "id": 4,
     "title": "NetScan Pro - Network Analyzer",
     "description": "A comprehensive network analysis tool for monitoring, scanning, and troubleshooting network infrastructure with real-time insights.",
-    "image": "/assets/images/netscan-project.jpg",
+    "image": "",
     "technologies": [
       "Python",
       "Scapy",
@@ -109,8 +145,14 @@
     "id": 5,
     "title": "Finance Management using AI ",
     "description": "A tool for managing finance using AI.",
-    "image": "/assets/images/quiz-master-project.jpg",
-    "technologies": ["Python", "TypeScript", "Firebase", "React ", "Lottie"],
+    "image": "",
+    "technologies": [
+      "Python",
+      "TypeScript",
+      "Firebase",
+      "React ",
+      "Lottie"
+    ],
     "githubUrl": "https://github.com/yashborse/quiz-master",
     "liveUrl": "https://expo.dev/@yashborse/quiz-master",
     "featured": false,

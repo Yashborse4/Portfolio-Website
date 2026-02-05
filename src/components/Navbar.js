@@ -13,13 +13,13 @@ const NavContainer = styled(motion.nav)`
   z-index: 1000;
   padding: 1rem 0;
   backdrop-filter: blur(20px);
-  background: ${({ scrolled, theme }) => 
-    scrolled 
+  background: ${({ scrolled, theme }) =>
+    scrolled
       ? theme.colors.glass.backdrop
       : 'transparent'
   };
-  border-bottom: ${({ scrolled, theme }) => 
-    scrolled 
+  border-bottom: ${({ scrolled, theme }) =>
+    scrolled
       ? `1px solid ${theme.colors.glass.border}`
       : 'none'
   };
@@ -207,7 +207,7 @@ const Navbar = () => {
     { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
     { icon: FaLinkedin, href: 'https://www.linkedin.com/in/yashborse/', label: 'LinkedIn' },
     { icon: FaTwitter, href: 'https://twitter.com/yashborse4u', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:yash_borse432005@gmail.com', label: 'Email' }
+    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' }
   ];
 
   const closeMobileMenu = () => {
