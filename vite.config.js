@@ -5,7 +5,7 @@ export default defineConfig({
     base: "/Portfolio-Website/",
     plugins: [react()],
     build: {
-        outDir: 'build',
+        outDir: 'docs',
     },
     server: {
         port: 3000,

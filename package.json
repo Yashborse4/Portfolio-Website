@@ -22,10 +22,8 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "build": "vite build --outDir docs",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
