@@ -298,6 +298,11 @@ const About = () => {
               Previously, I served as a React Native Developer at <span className="highlight">Hindustan Aeronautics Limited (HAL), Nashik</span>, 
               delivering secure mobile solutions for the aerospace sector.
             </p>
+            <p className="paragraph">
+              I hold a Diploma in Computer Engineering with <span className="highlight">84.5%</span> and 
+              am pursuing my B.E. in Computer Science. I have completed professional training in 
+              <span className="highlight">AWS</span> and <span className="highlight">Google Cloud</span>.
+            </p>
             
             <AchievementBadge>
               <FaGooglePlay className="badge-icon" />

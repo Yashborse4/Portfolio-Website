@@ -621,8 +621,8 @@ const Hero = () => {
           <div className="stat-label">Published on Play Store</div>
         </StatItem>
         <StatItem>
-          <div className="stat-value">2+</div>
-          <div className="stat-label">Certifications</div>
+          <div className="stat-value">5+</div>
+          <div className="stat-label">Professional Badges</div>
         </StatItem>
       </StatsBar>
     </HeroContainer>

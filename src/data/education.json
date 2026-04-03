@@ -75,21 +75,22 @@
   },
   {
     "id": 3,
-    "institution": "AWS",
-    "degree": "AWS Certified Solutions Architect - Associate",
+    "institution": "Udemy",
+    "degree": "AWS Solutions Architect & Developer Training",
     "duration": "2024",
     "location": "Online",
-    "description": "Professional certification demonstrating expertise in designing distributed systems on AWS.",
+    "description": "Comprehensive professional training covering the design and deployment of scalable, distributed systems on AWS.",
     "relevantCoursework": [
-      "AWS Core Services",
-      "Security and Compliance",
-      "Technology Solutions",
-      "Cost Optimization",
-      "Performance Optimization"
+      "AWS Core Services (EC2, S3, RDS)",
+      "VPC & Networking Infrastructure",
+      "Serverless Computing (Lambda)",
+      "Security & IAM Best Practices",
+      "Cost & Performance Optimization"
     ],
     "achievements": [
-      "Passed on first attempt",
-      "Score: 892/1000"
+      "Completed 20+ hours of hands-on professional training",
+      "Architected multiple serverless and containerized project deployments",
+      "Deep understanding of AWS Well-Architected Framework"
     ],
     "type": "certification"
   },
