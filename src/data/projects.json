@@ -17,7 +17,7 @@
       "PostgreSQL",
       "JWT"
     ],
-    "githubUrl": "https://github.com/yashborse/wheel-deals",
+    "githubUrl": "https://github.com/Yashborse4/Portfolio-Website",
     "liveUrl": "#",
     "featured": true,
     "category": "Full Stack & DevOps",
@@ -42,7 +42,7 @@
       "Charts",
       "AsyncStorage"
     ],
-    "githubUrl": "https://github.com/yashborse/expense-manager",
+    "githubUrl": "https://github.com/Yashborse4/expense-manager",
     "liveUrl": "https://expo.dev/@yashborse/expense-manager",
     "featured": true,
     "category": "Mobile App",
@@ -56,31 +56,29 @@
   },
   {
     "id": 3,
-    "title": "CampusGuard - Smart Surveillance System",
-    "description": "An intelligent campus security solution using computer vision for real-time monitoring, threat detection, and automated alerts.",
+    "title": "Campus Surveillance - Smart Tracking",
+    "description": "An intelligent student tracking and face detection system for campus security. Features real-time monitoring, automated attendance/tracking, and high-precision face recognition using computer vision.",
     "image": "",
     "technologies": [
       "Python",
       "OpenCV",
-      "YOLOv8 (Object Detection)",
+      "YOLOv8",
+      "Face Recognition",
       "Flask",
       "WebSocket",
-      "TensorFlow",
       "PostgreSQL"
     ],
-    "githubUrl": "https://github.com/yashborse/campusguard",
+    "githubUrl": "https://github.com/Yashborse4/Campus-Surveillance",
     "liveUrl": "#",
     "featured": true,
     "category": "AI/ML Application",
     "completedDate": "2023-09-10",
     "features": [
-      "Real-time object and person detection",
-      "Suspicious activity alerts",
-      "Face recognition for authorized personnel",
-      "Crowd density monitoring",
-      "Automated incident reporting",
-      "Multi-camera support",
-      "Web-based dashboard for monitoring"
+      "Real-time student tracking and trajectory analysis across campus corridors",
+      "High-precision face detection and recognition for automated authorized access",
+      "Automated alert system for unauthorized entry or suspicious behavior",
+      "Web-based dashboard for live monitoring and incident reporting",
+      "Scalable multi-camera support with real-time video processing"
     ]
   },
   {
@@ -97,7 +95,7 @@
       "Docker",
       "Redis"
     ],
-    "githubUrl": "https://github.com/yashborse/netscan-pro",
+    "githubUrl": "https://github.com/Yashborse4/netscan-pro",
     "liveUrl": "#",
     "featured": false,
     "category": "Network Utility",
@@ -124,7 +122,7 @@
       "React ",
       "Lottie"
     ],
-    "githubUrl": "https://github.com/yashborse/quiz-master",
+    "githubUrl": "https://github.com/Yashborse4/quiz-master",
     "liveUrl": "https://expo.dev/@yashborse/quiz-master",
     "featured": false,
     "category": "Mobile App",
