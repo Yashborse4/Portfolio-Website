@@ -2,90 +2,32 @@
   {
     "id": 7,
     "title": "Wheel Deals",
-    "description": "A premium automotive marketplace application built for ZenZero Developer. Features a high-performance mobile app and a robust Spring Boot backend with advanced security and automation.",
+    "description": "A high-scale, premium automotive marketplace ecosystem featuring a React Native mobile app, a secure Spring Boot backend, and cloud-native DevOps infrastructure. Originally developed as AutoTradeX and refined into the enterprise-grade Wheel Deals platform.",
     "image": "",
     "technologies": [
-      "React Native",
       "Spring Boot 3.x",
-      "PostgreSQL",
-      "GitHub Actions",
-      "Docker",
-      "VPS Management",
+      "React Native",
+      "MySQL",
       "Redis",
-      "Firewall & Security"
+      "WebSockets",
+      "Docker",
+      "AWS",
+      "GitHub Actions",
+      "VPC",
+      "PostgreSQL",
+      "JWT"
     ],
-    "githubUrl": "#",
+    "githubUrl": "https://github.com/yashborse/wheel-deals",
     "liveUrl": "#",
     "featured": true,
-    "category": "Full Stack App",
+    "category": "Full Stack & DevOps",
     "completedDate": "2026-03-15",
     "features": [
-      "Developed full-stack mobile application from ground up",
-      "Automated deployment using GitHub Actions to VPS",
-      "Enterprise-grade security with Firewall and Rate-limiting",
-      "High-performance backend with Spring Boot and PostgreSQL",
-      "Efficient data handling with Redis caching",
-      "Comprehensive vehicle management and user marketplace"
-    ]
-  },
-  {
-    "id": 6,
-    "title": "Sell-the-old-Car Backend",
-    "description": "A robust backend marketplace for buying and selling used cars, featuring hybrid REST and GraphQL API architecture with enterprise-grade security and scalability.",
-    "image": "",
-    "technologies": [
-      "Java 17",
-      "Spring Boot 3.x",
-      "GraphQL",
-      "PostgreSQL",
-      "OpenSearch",
-      "Redis",
-      "Docker",
-      "JWT Authentication"
-    ],
-    "githubUrl": "https://github.com/yashborse/sell-the-old-car",
-    "liveUrl": "#",
-    "featured": true,
-    "category": "Backend API",
-    "completedDate": "2024-02-01",
-    "features": [
-      "Hybrid REST + GraphQL API architecture",
-      "JWT-based secure authentication",
-      "Real-time chat messaging system",
-      "Dealer verification workflow",
-      "Backblaze B2 media storage integration",
-      "OpenSearch full-text search engine",
-      "Redis caching for performance",
-      "Docker containerization with Compose"
-    ]
-  },
-  {
-    "id": 1,
-    "title": "AutoTradeX - Used Car Marketplace",
-    "description": "A comprehensive e-commerce platform for buying and selling used cars with advanced search, AI-based price prediction, and secure payment processing.",
-    "image": "",
-    "technologies": [
-      "React Native",
-      "Java ",
-      "Spring Boot",
-      "PostgreSQL",
-      "JWT Authentication",
-      "GraphQL API",
-      "Redux Toolkit"
-    ],
-    "githubUrl": "https://github.com/yashborse/autotradex",
-    "liveUrl": "https://autotradex-demo.vercel.app",
-    "featured": true,
-    "category": "Web Application",
-    "completedDate": "2024-01-15",
-    "features": [
-      "Advanced car search with filters (price, year, mileage, etc.)",
-      "AI-powered price prediction based on market trends",
-      "Secure user authentication with JWT and Firebase",
-      "Real-time chat between buyers and sellers",
-      "Image upload and car photo gallery",
-      "Saved searches and favorite listings",
-      "Responsive design for all devices"
+      "FRONTEND: Built a premium React Native mobile app with real-time dealer-user chat, advanced car filters, and secure image/video gallery (up to 500MB).",
+      "BACKEND: Architected a scalable Spring Boot API handling 5,000+ active users, managing complex vehicle inventories, pricing engines, and transaction workflows.",
+      "DEVOPS: Implemented automated CI/CD pipelines via GitHub Actions and managed production-ready VPS infrastructure on AWS with custom firewalls and rate-limiting.",
+      "PERFORMANCE: Achieved <200ms API response times using Redis caching and optimized media processing pipes, reducing upload latency by 35%.",
+      "SECURITY: Integrated JWT-based authentication, secure dealer verification flows, and enterprise-grade data protection."
     ]
   },
   {

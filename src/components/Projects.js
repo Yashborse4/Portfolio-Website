@@ -191,7 +191,7 @@ const Projects = () => {
     : projectsData.filter(p => p.category === filter);
 
   // Projects that are published on Play Store
-  const playStoreProjects = ['AutoTradeX - Used Car Marketplace'];
+  const playStoreProjects = ['Wheel Deals'];
 
   return (
     <ProjectsContainer id="projects" ref={ref}>
