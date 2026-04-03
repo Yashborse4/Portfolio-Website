@@ -459,9 +459,9 @@ const TERMINAL_COMMANDS = [
     input: 'cat profile.json',
     output: JSON.stringify({
       role: "Full Stack Developer",
-      company: "ZenZero Developer",
+      company: "ZenZero Developer (Startup)",
       app: "Wheel Deals",
-      stack: ["Spring Boot", "React Native", "PostgreSQL", "GitHub Actions", "Docker", "VPS"],
+      stack: ["Spring Boot", "React Native", "MySQL", "Redis", "WebSockets", "Docker", "AWS"],
       location: "India"
     }, null, 2),
     isJson: true
@@ -560,14 +560,14 @@ const Hero = () => {
           </NameHeading>
           
           <RoleSubtext variants={fadeInUp}>
-            Full Stack Developer · React Native · Java
+            Full Stack Developer · React Native · DevOps
           </RoleSubtext>
           
           <SpecialtiesList variants={fadeInUp}>
             <SpecialtyTag>Spring Boot</SpecialtyTag>
             <SpecialtyTag>React Native</SpecialtyTag>
-            <SpecialtyTag>PostgreSQL</SpecialtyTag>
-            <SpecialtyTag>GraphQL</SpecialtyTag>
+            <SpecialtyTag>GitHub Actions</SpecialtyTag>
+            <SpecialtyTag>VPS Management</SpecialtyTag>
             <SpecialtyTag>Docker</SpecialtyTag>
           </SpecialtiesList>
           

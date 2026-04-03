@@ -285,18 +285,18 @@ const About = () => {
             <p className="paragraph">
               I'm <span className="highlight">Yash Borse</span>, a Full Stack Developer
               with <span className="highlight">{experience}+ years</span> of experience,
-              currently working at <span className="highlight">ZenZero Developer</span> — 
-              delivering end-to-end premium automotive applications like <span className="highlight">Wheel Deals</span>.
+              currently leading development at <span className="highlight">ZenZero Developer (Startup)</span> — 
+              architecting high-scale automotive solutions like <span className="highlight">Wheel Deals</span>.
+            </p>
+            <p className="paragraph">
+              I specialize in building scalable <span className="highlight">Spring Boot</span> backends handling 5,000+ active users 
+              and complex transaction workflows. My expertise includes implementing <span className="highlight">WebSocket</span> real-time features, 
+              optimizing media pipelines for <span className="highlight">reduced latency (35%+)</span>, and managing production environments on 
+              <span className="highlight">AWS</span> and <span className="highlight">VPS</span> using Docker and GitHub Actions.
             </p>
             <p className="paragraph">
               Previously, I served as a React Native Developer at <span className="highlight">Hindustan Aeronautics Limited (HAL), Nashik</span>, 
-              building secure, mission-critical mobile solutions for the aerospace sector.
-            </p>
-            <p className="paragraph">
-              My expertise spans the full stack: from <span className="highlight">Spring Boot</span> backends 
-              and <span className="highlight">PostgreSQL</span> databases to <span className="highlight">React Native</span> mobile apps. 
-              I specialize in <span className="highlight">VPS Management</span>, <span className="highlight">GitHub Actions</span> automation, 
-              and enterprise-grade security including custom firewalls and rate-limiting.
+              delivering secure mobile solutions for the aerospace sector.
             </p>
             
             <AchievementBadge>
