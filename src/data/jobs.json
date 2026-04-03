@@ -1,17 +1,33 @@
 [
   {
+    "id": 2,
+    "company": "ZenZero Developer",
+    "position": "Full Stack Developer",
+    "duration": "Jan 2026 - Present",
+    "location": "Remote",
+    "description": "Developed a comprehensive automotive marketplace application 'Wheel Deals' from scratch. Responsible for end-to-end delivery including mobile app, backend services, and server infrastructure.",
+    "technologies": ["React Native", "Spring Boot", "PostgreSQL", "GitHub Actions", "Docker", "VPS Management", "Firewall Configuration", "Rate Limiting", "Redis"],
+    "achievements": [
+      "Developed and deployed the full-featured 'Wheel Deals' mobile application",
+      "Architected and built a high-performance Spring Boot backend with enterprise security",
+      "Configured VPS infrastructure with automated GitHub Actions CI/CD pipelines",
+      "Implemented advanced security measures including custom firewalls and rate-limiting",
+      "Optimized database performance with complex PostgreSQL queries and Redis caching"
+    ]
+  },
+  {
     "id": 1,
     "company": "Hindustan Aeronautics Limited (HAL)",
     "position": "React Native Developer",
-    "duration": "2023 - Present",
-    "location": "Bangalore, India",
-    "description": "Developing cross-platform mobile applications for aerospace and defense sector using React Native, focusing on high-performance, secure, and scalable solutions.",
-    "technologies": ["React Native", "TypeScript", "Redux Toolkit", "Firebase", "Native Modules", "React Navigation", "Expo"],
+    "duration": "Oct 2024 - Jan 2026",
+    "location": "Nashik, India",
+    "description": "Developed cross-platform mobile applications for the aerospace and defense sector, focusing on high-performance, secure, and scalable solutions for critical operations.",
+    "technologies": ["React Native", "TypeScript", "Redux Toolkit", "PostgreSQL", "Native Modules", "React Navigation", "Docker"],
     "achievements": [
-      "Built secure mobile applications for defense sector",
-      "Implemented offline-first architecture for critical apps",
+      "Built secure mobile applications for defense-grade systems",
+      "Implemented offline-first architecture for mission-critical apps",
       "Optimized app performance achieving 60fps animations",
-      "Integrated native device features and sensors"
+      "Integrated native device features and sensors for real-time telemetry"
     ]
   }
 ]

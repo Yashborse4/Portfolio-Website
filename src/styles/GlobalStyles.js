@@ -2,8 +2,7 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   /* Google Fonts Import */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap');
   
   /* CSS Custom Properties */
   :root {
@@ -76,7 +75,7 @@ const GlobalStyles = createGlobalStyle`
     color: var(--color-text);
     background: var(--color-background);
     background-attachment: fixed;
-    transition: all var(--transition-normal);
+    transition: background-color 0.4s ease, color 0.4s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -151,22 +150,20 @@ const GlobalStyles = createGlobalStyle`
   /* Typography */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-secondary);
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.2;
     margin-bottom: 1rem;
     color: var(--color-text);
-    letter-spacing: -0.025em;
+    letter-spacing: -0.01em;
   }
   
   h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.03em;
   }
   
   h2 {
     font-size: clamp(1.75rem, 4vw, 2.75rem);
-    font-weight: 600;
   }
   
   h3 {
@@ -176,16 +173,6 @@ const GlobalStyles = createGlobalStyle`
   
   h4 {
     font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-    font-weight: 500;
-  }
-  
-  h5 {
-    font-size: clamp(1.125rem, 2vw, 1.5rem);
-    font-weight: 500;
-  }
-  
-  h6 {
-    font-size: clamp(1rem, 1.5vw, 1.25rem);
     font-weight: 500;
   }
   
@@ -221,18 +208,18 @@ const GlobalStyles = createGlobalStyle`
   
   /* Selection */
   ::selection {
-    background-color: var(--color-accent);
+    background-color: var(--color-primary);
     color: white;
   }
   
   ::-moz-selection {
-    background-color: var(--color-accent);
+    background-color: var(--color-primary);
     color: white;
   }
   
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
   
   ::-webkit-scrollbar-track {
@@ -240,28 +227,22 @@ const GlobalStyles = createGlobalStyle`
   }
   
   ::-webkit-scrollbar-thumb {
-    background: var(--glass-backdrop);
+    background: var(--color-primary);
     border-radius: var(--radius-full);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
+    opacity: 0.5;
   }
   
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-accent);
   }
   
-  /* Utility classes for glassmorphism */
+  /* Utility classes */
   .glass {
     background: var(--glass-backdrop);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
-  }
-  
-  .glass-hover:hover {
-    background: ${({ theme }) => theme.colors.glass.backdropHover};
-    transform: translateY(-2px);
   }
   
   /* Animation utilities */
@@ -296,18 +277,6 @@ const GlobalStyles = createGlobalStyle`
       opacity: 1;
       transform: translateX(0);
     }
-  }
-  
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out;
-  }
-  
-  .animate-slide-in-left {
-    animation: slideInFromLeft 0.6s ease-out;
-  }
-  
-  .animate-slide-in-right {
-    animation: slideInFromRight 0.6s ease-out;
   }
 `;
 

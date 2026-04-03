@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { motion, useInView } from 'framer-motion';
-import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaCheckCircle, FaRocket } from 'react-icons/fa';
-import { glassCard, glassPremium } from '../styles/mixins';
-import { staggerContainer, fadeInUp, timelineIconVariants } from '../styles/animations';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { FaBriefcase, FaCalendar, FaMapMarkerAlt, FaCheckCircle, FaRocket, FaChevronDown } from 'react-icons/fa';
+import { staggerContainer, fadeInUp } from '../styles/animations';
 import jobsData from '../data/jobs.json';
 
 // ========================================
@@ -11,41 +10,37 @@ import jobsData from '../data/jobs.json';
 // ========================================
 const pulse = keyframes`
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.8; }
 `;
 
 const ExperienceContainer = styled.section`
-  padding: 100px 0;
-  max-width: 1000px;
+  padding: 100px 2rem;
+  max-width: 900px;
   margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
   
   @media (max-width: 768px) {
     padding: 80px 1rem;
   }
 `;
 
-const SectionTitle = styled(motion.h2)`
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
+const SectionLabel = styled(motion.div)`
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.primary};
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
   text-align: center;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.text}, ${({ theme }) => theme.colors.primary});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 `;
 
-const SectionSubtitle = styled(motion.p)`
+const SectionTitle = styled(motion.h2)`
+  font-family: ${({ theme }) => theme.fonts.secondary};
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 700;
   text-align: center;
-  font-size: 1.125rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: 4rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  color: ${({ theme }) => theme.colors.text};
+  font-style: italic;
 `;
 
 const Timeline = styled.div`
@@ -55,229 +50,291 @@ const Timeline = styled.div`
     content: '';
     position: absolute;
     top: 0;
-    left: 30px;
-    width: 3px;
+    left: 24px;
+    width: 2px;
     height: 100%;
     background: linear-gradient(
       180deg,
       ${({ theme }) => theme.colors.primary},
-      ${({ theme }) => theme.colors.accent}
+      ${({ theme }) => theme.colors.primary}40
     );
-    border-radius: 3px;
     
     @media (min-width: 768px) {
-      left: 50%;
-      transform: translateX(-50%);
+      left: 24px;
     }
   }
 `;
 
-const ExperienceItem = styled(motion.div)`
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 3rem;
+const TimelineItem = styled(motion.div)`
   position: relative;
-  padding-left: 80px;
+  margin-bottom: 2rem;
+  padding-left: 60px;
   
-  @media (min-width: 768px) {
-    padding-left: 0;
-    
-    &:nth-child(odd) {
-      padding-right: calc(50% + 50px);
-      
-      .card {
-        text-align: right;
-      }
-      
-      .meta {
-        justify-content: flex-end;
-      }
-    }
-    
-    &:nth-child(even) {
-      padding-left: calc(50% + 50px);
-    }
+  &:last-child {
+    margin-bottom: 0;
   }
 `;
 
-const TimelineIcon = styled(motion.div)`
+const TimelineDot = styled.div`
   position: absolute;
-  left: 10px;
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
+  left: 12px;
+  top: 8px;
+  width: 26px;
+  height: 26px;
+  background: ${({ $isCurrent, theme }) => 
+    $isCurrent 
+      ? theme.colors.primary
+      : theme.colors.surface
+  };
+  border: 3px solid ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1rem;
-  z-index: 2;
-  box-shadow: 0 0 20px ${({ theme }) => theme.colors.primary}50;
   
-  @media (min-width: 768px) {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-  }`;
+  ${({ $isCurrent }) => $isCurrent && `
+    box-shadow: 0 0 0 4px rgba(184, 115, 51, 0.2);
+  `}
+  
+  svg {
+    font-size: 0.55rem;
+    color: white;
+  }
+`;
 
 const ExperienceCard = styled(motion.div)`
-  ${glassPremium}
-  padding: 1.5rem;
-  position: relative;
-  width: 100%;
+  background: ${({ theme }) => theme.colors.glass.backdrop};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    width: 20px;
-    height: 2px;
-    background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-    left: -20px;
-    
-    @media (min-width: 768px) {
-      ${ExperienceItem}:nth-child(odd) & {
-        left: auto;
-        right: -20px;
-      }
-      
-      ${ExperienceItem}:nth-child(even) & {
-        left: -20px;
-      }
-    }
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary}30;
+    box-shadow: 0 8px 30px ${({ theme }) => theme.colors.glass.shadow};
+  }
+`;
+
+const CardHeader = styled.div`
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryGlass};
   }
   
-  .company {
-    font-family: ${({ theme }) => theme.fonts.secondary};
-    font-size: 1.25rem;
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.35rem;
+  }
+  
+  .company-name {
+    font-family: ${({ theme }) => theme.fonts.primary};
+    font-size: 1.1rem;
     font-weight: 700;
     color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.25rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-wrap: wrap;
   }
   
   .current-badge {
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.success}, ${({ theme }) => theme.colors.accent});
+    background: ${({ theme }) => theme.colors.primary};
     color: white;
-    padding: 0.2rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.65rem;
-    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     animation: ${pulse} 2s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    gap: 3px;
   }
   
   .position {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
     color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
   
   .meta {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
     flex-wrap: wrap;
     
     .meta-item {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: ${({ theme }) => theme.colors.textSecondary};
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      color: ${({ theme }) => theme.colors.textMuted};
       
-      .icon {
+      svg {
+        font-size: 0.7rem;
         color: ${({ theme }) => theme.colors.primary};
-        font-size: 0.75rem;
       }
     }
   }
   
+  .chevron {
+    color: ${({ theme }) => theme.colors.textMuted};
+    transition: transform 0.3s ease;
+    font-size: 0.85rem;
+    
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+`;
+
+const CardBody = styled(motion.div)`
+  padding: 0 1.5rem 1.5rem;
+  
   .description {
     font-size: 0.9rem;
-    line-height: 1.6;
+    line-height: 1.7;
     color: ${({ theme }) => theme.colors.textSecondary};
     margin-bottom: 1.25rem;
   }
 `;
 
-const TechnologiesContainer = styled.div`
+const TechList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
   margin-bottom: 1.25rem;
   
-  .technologies-label {
-    font-size: 0.75rem;
+  .tech-label {
+    font-size: 0.7rem;
     font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors.textMuted};
     text-transform: uppercase;
     letter-spacing: 0.5px;
-  }
-  
-  .technologies-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    
-    @media (min-width: 768px) {
-      ${ExperienceItem}:nth-child(odd) & {
-        justify-content: flex-end;
-      }
-    }
+    margin-bottom: 0.25rem;
+    width: 100%;
   }
 `;
 
-const TechTag = styled(motion.span)`
+const TechTag = styled.span`
+  font-size: 0.72rem;
+  font-family: ${({ theme }) => theme.fonts.mono};
   background: ${({ theme }) => theme.colors.primaryGlass};
   color: ${({ theme }) => theme.colors.primary};
   padding: 0.2rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  border: 1px solid ${({ theme }) => theme.colors.primary}30;
+  border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.colors.primary}20;
 `;
 
-const AchievementsList = styled.div`
-  .achievements-label {
-    font-size: 0.75rem;
+const AchievementList = styled.div`
+  .achievement-label {
+    font-size: 0.7rem;
     font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors.textMuted};
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
   }
   
   .achievement {
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
     font-size: 0.85rem;
     color: ${({ theme }) => theme.colors.textSecondary};
+    line-height: 1.5;
     
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    .icon {
+    svg {
       color: ${({ theme }) => theme.colors.success};
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
       flex-shrink: 0;
-      font-size: 0.75rem;
-    }
-    
-    @media (min-width: 768px) {
-      ${ExperienceItem}:nth-child(odd) & {
-        flex-direction: row-reverse;
-        text-align: right;
-      }
+      font-size: 0.7rem;
     }
   }
 `;
+
+// ========================================
+// ACCORDION ITEM COMPONENT
+// ========================================
+const AccordionCard = ({ job, isInitiallyOpen }) => {
+  const [isOpen, setIsOpen] = useState(isInitiallyOpen);
+  const isCurrent = job.duration?.includes('Present');
+
+  return (
+    <TimelineItem variants={fadeInUp}>
+      <TimelineDot $isCurrent={isCurrent}>
+        {isCurrent && <FaRocket />}
+      </TimelineDot>
+      
+      <ExperienceCard>
+        <CardHeader onClick={() => setIsOpen(!isOpen)}>
+          <div className="top-row">
+            <div className="company-name">
+              {job.company}
+              {isCurrent && (
+                <span className="current-badge">
+                  <FaRocket style={{ fontSize: '0.5rem' }} /> Current
+                </span>
+              )}
+            </div>
+            <FaChevronDown className={`chevron ${isOpen ? 'open' : ''}`} />
+          </div>
+          <div className="position">{job.position}</div>
+          <div className="meta">
+            <div className="meta-item">
+              <FaCalendar />
+              <span>{job.duration}</span>
+            </div>
+            <div className="meta-item">
+              <FaMapMarkerAlt />
+              <span>{job.location}</span>
+            </div>
+          </div>
+        </CardHeader>
+        
+        <AnimatePresence>
+          {isOpen && (
+            <CardBody
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <p className="description">{job.description}</p>
+              
+              <TechList>
+                <div className="tech-label">Technologies</div>
+                {job.technologies.map((tech, i) => (
+                  <TechTag key={i}>{tech}</TechTag>
+                ))}
+              </TechList>
+              
+              {job.achievements && (
+                <AchievementList>
+                  <div className="achievement-label">Key Achievements</div>
+                  {job.achievements.map((ach, i) => (
+                    <div className="achievement" key={i}>
+                      <FaCheckCircle />
+                      <span>{ach}</span>
+                    </div>
+                  ))}
+                </AchievementList>
+              )}
+            </CardBody>
+          )}
+        </AnimatePresence>
+      </ExperienceCard>
+    </TimelineItem>
+  );
+};
 
 // ========================================
 // EXPERIENCE COMPONENT
@@ -293,87 +350,18 @@ const Experience = () => {
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
+        <SectionLabel variants={fadeInUp}>// experience</SectionLabel>
         <SectionTitle variants={fadeInUp}>
-          Professional Experience
+          Professional Journey
         </SectionTitle>
-
-        <SectionSubtitle variants={fadeInUp}>
-          A journey through my professional growth and achievements
-        </SectionSubtitle>
 
         <Timeline>
           {jobsData.map((job, index) => (
-            <ExperienceItem key={job.id} variants={fadeInUp}>
-              <TimelineIcon
-                variants={timelineIconVariants}
-                whileHover={{ scale: 1.2, rotate: 360 }}
-                transition={{ duration: 0.5 }}
-              >
-                <FaBriefcase />
-              </TimelineIcon>
-
-              <ExperienceCard
-                className="card"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-              >
-                <h3 className="company">
-                  {job.company}
-                  {job.duration.includes('Present') && (
-                    <span className="current-badge">
-                      <FaRocket style={{ marginRight: '4px' }} />
-                      Current
-                    </span>
-                  )}
-                </h3>
-                <h4 className="position">{job.position}</h4>
-
-                <div className="meta">
-                  <div className="meta-item">
-                    <FaCalendar className="icon" />
-                    <span>{job.duration}</span>
-                  </div>
-                  <div className="meta-item">
-                    <FaMapMarkerAlt className="icon" />
-                    <span>{job.location}</span>
-                  </div>
-                </div>
-
-                <p className="description">{job.description}</p>
-
-                <TechnologiesContainer>
-                  <div className="technologies-label">Technologies</div>
-                  <div className="technologies-list">
-                    {job.technologies.map((tech, techIndex) => (
-                      <TechTag
-                        key={techIndex}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5 + techIndex * 0.05 }}
-                      >
-                        {tech}
-                      </TechTag>
-                    ))}
-                  </div>
-                </TechnologiesContainer>
-
-                <AchievementsList>
-                  <div className="achievements-label">Key Achievements</div>
-                  {job.achievements.map((achievement, achIndex) => (
-                    <motion.div
-                      key={achIndex}
-                      className="achievement"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 + achIndex * 0.1 }}
-                    >
-                      <FaCheckCircle className="icon" />
-                      <span>{achievement}</span>
-                    </motion.div>
-                  ))}
-                </AchievementsList>
-              </ExperienceCard>
-            </ExperienceItem>
+            <AccordionCard
+              key={job.id}
+              job={job}
+              isInitiallyOpen={index === 0}
+            />
           ))}
         </Timeline>
       </motion.div>

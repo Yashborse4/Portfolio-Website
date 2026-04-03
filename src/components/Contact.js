@@ -1,193 +1,200 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { motion, useInView } from 'framer-motion';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter, FaPaperPlane, FaCheckCircle } from 'react-icons/fa';
-import { glassCard } from '../styles/mixins';
+import { FaEnvelope, FaLinkedin, FaGithub, FaPaperPlane, FaMapMarkerAlt } from 'react-icons/fa';
+import { staggerContainer, fadeInUp } from '../styles/animations';
 
+// ========================================
+// STYLED COMPONENTS
+// ========================================
 const ContactContainer = styled.section`
-  padding: 100px 0;
-  max-width: 1200px;
+  padding: 100px 2rem;
+  max-width: 1000px;
   margin: 0 auto;
-  padding-left: 2rem;
-  padding-right: 2rem;
   
   @media (max-width: 768px) {
     padding: 80px 1rem;
   }
 `;
 
+const SectionLabel = styled(motion.div)`
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.primary};
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+  text-align: center;
+`;
+
 const SectionTitle = styled(motion.h2)`
   font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2.5rem);
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.text}, ${({ theme }) => theme.colors.primary});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: ${({ theme }) => theme.colors.text};
+  font-style: italic;
 `;
 
 const SectionSubtitle = styled(motion.p)`
   text-align: center;
-  font-size: 1.125rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 4rem;
-  max-width: 600px;
+  margin-bottom: 3rem;
+  max-width: 500px;
   margin-left: auto;
   margin-right: auto;
 `;
 
-const ContactContent = styled.div`
+const ContactGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
   
-  @media (max-width: 968px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2rem;
   }
 `;
 
-const ContactInfo = styled(motion.div)`
-  .info-title {
-    font-family: ${({ theme }) => theme.fonts.secondary};
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 1rem;
-  }
-  
-  .info-description {
-    color: ${({ theme }) => theme.colors.textSecondary};
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-  }
-`;
-
-const ContactInfoList = styled.div`
+const ConnectCards = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
 `;
 
-const ContactInfoItem = styled(motion.div)`
+const ConnectCard = styled(motion.a)`
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 1.25rem;
   background: ${({ theme }) => theme.colors.glass.backdrop};
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border: 1px solid ${({ theme }) => theme.colors.glass.border};
   border-radius: 12px;
   transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
   
   &:hover {
-    background: ${({ theme }) => theme.colors.glass.backdropHover};
-    transform: translateX(5px);
+    border-color: ${({ theme }) => theme.colors.primary}30;
+    transform: translateX(4px);
+    
+    .icon-box {
+      background: ${({ theme }) => theme.colors.primary};
+      color: white;
+    }
   }
   
-  .icon {
-    font-size: 1.2rem;
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: ${({ theme }) => theme.colors.primaryGlass};
     color: ${({ theme }) => theme.colors.primary};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
     flex-shrink: 0;
   }
   
-  .content {
-    .label {
-      font-size: 0.875rem;
+  .card-text {
+    .card-label {
+      font-size: 0.75rem;
       color: ${({ theme }) => theme.colors.textMuted};
-      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
-    .value {
-      font-weight: 500;
+    .card-value {
+      font-size: 0.95rem;
+      font-weight: 600;
       color: ${({ theme }) => theme.colors.text};
     }
   }
 `;
 
-const SocialLinks = styled.div`
-  .social-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 1rem;
-  }
-  
-  .social-list {
-    display: flex;
-    gap: 1rem;
-  }
-`;
-
-const SocialLink = styled(motion.a)`
+const LocationInfo = styled(motion.div)`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
   background: ${({ theme }) => theme.colors.glass.backdrop};
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border: 1px solid ${({ theme }) => theme.colors.glass.border};
   border-radius: 12px;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
   
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    transform: translateY(-3px);
+  .icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: ${({ theme }) => theme.colors.primaryGlass};
+    color: ${({ theme }) => theme.colors.primary};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  
+  .location-text {
+    .loc-label {
+      font-size: 0.75rem;
+      color: ${({ theme }) => theme.colors.textMuted};
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .loc-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: ${({ theme }) => theme.colors.text};
+    }
   }
 `;
 
 const ContactForm = styled(motion.form)`
-  ${glassCard}
+  background: ${({ theme }) => theme.colors.glass.backdrop};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+  border-radius: 12px;
   padding: 2rem;
 `;
 
-const FormTitle = styled.h3`
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 1.5rem;
-`;
-
 const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   
   label {
     display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.text};
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: ${({ theme }) => theme.colors.textSecondary};
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 0.5rem;
   }
   
   input, textarea {
     width: 100%;
-    padding: 0.875rem 1rem;
-    background: ${({ theme }) => theme.colors.glass.backdrop};
+    padding: 0.75rem 1rem;
+    background: ${({ theme }) => theme.colors.surface};
     border: 1px solid ${({ theme }) => theme.colors.glass.border};
     border-radius: 8px;
     color: ${({ theme }) => theme.colors.text};
     font-family: ${({ theme }) => theme.fonts.primary};
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    
-    &::placeholder {
-      color: ${({ theme }) => theme.colors.textMuted};
-    }
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
     
     &:focus {
       outline: none;
       border-color: ${({ theme }) => theme.colors.primary};
-      background: ${({ theme }) => theme.colors.glass.backdropHover};
+    }
+    
+    &::placeholder {
+      color: ${({ theme }) => theme.colors.textMuted};
     }
   }
   
@@ -199,59 +206,47 @@ const FormGroup = styled.div`
 
 const SubmitButton = styled(motion.button)`
   width: 100%;
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
+  padding: 0.85rem;
+  background: ${({ theme }) => theme.colors.primary};
   color: white;
   border: none;
   border-radius: 8px;
-  font-family: ${({ theme }) => theme.fonts.primary};
-  font-size: 1rem;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  transition: all 0.3s ease;
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px ${({ theme }) => theme.colors.primary}40;
-  }
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+    opacity: 0.9;
+    transform: translateY(-1px);
   }
 `;
 
-const SuccessMessage = styled(motion.div)`
-  background: ${({ theme }) => theme.colors.successGlass};
-  color: ${({ theme }) => theme.colors.success};
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.success}30;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-`;
-
+// ========================================
+// CONTACT COMPONENT
+// ========================================
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const [formData, setFormData] = useState({
+    name: '', email: '', subject: '', message: ''
+  });
 
-  const contactInfo = [
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const mailtoLink = `mailto:yashborse432005@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`;
+    window.open(mailtoLink, '_blank');
+  };
+
+  const connectLinks = [
     {
       icon: FaEnvelope,
       label: 'Email',
@@ -259,231 +254,121 @@ const Contact = () => {
       href: 'mailto:yashborse432005@gmail.com'
     },
     {
-      icon: FaPhone,
-      label: 'Phone',
-      value: '+91 940 391 9940',
-      href: 'tel:+919403919940'
+      icon: FaLinkedin,
+      label: 'LinkedIn',
+      value: 'linkedin.com/in/yashborse',
+      href: 'https://www.linkedin.com/in/yashborse'
     },
     {
-      icon: FaMapMarkerAlt,
-      label: 'Location',
-      value: 'Maharashtra, India',
-      href: null
+      icon: FaGithub,
+      label: 'GitHub',
+      value: 'github.com/yashborse4',
+      href: 'https://github.com/yashborse4'
     }
   ];
-
-  const socialLinks = [
-    { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
-    { icon: FaLinkedin, href: 'https://linkedin.com/in/yashborse', label: 'LinkedIn' },
-    { icon: FaTwitter, href: 'https://twitter.com/yashborse4', label: 'Twitter' }
-  ];
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 5000);
-    }, 2000);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        duration: 0.5
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut'
-      }
-    }
-  };
 
   return (
     <ContactContainer id="contact" ref={ref}>
       <motion.div
-        variants={containerVariants}
+        variants={staggerContainer}
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
       >
-        <SectionTitle variants={itemVariants}>
-          Get In Touch
+        <SectionLabel variants={fadeInUp}>// contact</SectionLabel>
+        <SectionTitle variants={fadeInUp}>
+          Let's Connect
         </SectionTitle>
-
-        <SectionSubtitle variants={itemVariants}>
-          Let's discuss your next project or just say hello!
+        <SectionSubtitle variants={fadeInUp}>
+          Have a project in mind or want to collaborate? I'd love to hear from you.
         </SectionSubtitle>
 
-        <ContactContent>
-          <ContactInfo variants={itemVariants}>
-            <h3 className="info-title">Let's Connect</h3>
-            <p className="info-description">
-              I'm always interested in hearing about new opportunities and
-              exciting projects. Whether you have a question or just want to
-              say hi, I'll try my best to get back to you!
-            </p>
-
-            <ContactInfoList>
-              {contactInfo.map((info, index) => (
-                <ContactInfoItem
-                  key={index}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02 }}
-                  as={info.href ? 'a' : 'div'}
-                  href={info.href}
-                  target={info.href?.startsWith('mailto:') ? '_self' : '_blank'}
-                  rel="noopener noreferrer"
-                >
-                  <info.icon className="icon" />
-                  <div className="content">
-                    <div className="label">{info.label}</div>
-                    <div className="value">{info.value}</div>
-                  </div>
-                </ContactInfoItem>
-              ))}
-            </ContactInfoList>
-
-            <SocialLinks>
-              <div className="social-title">Follow Me</div>
-              <div className="social-list">
-                {socialLinks.map((social, index) => (
-                  <SocialLink
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    aria-label={social.label}
-                  >
-                    <social.icon />
-                  </SocialLink>
-                ))}
+        <ContactGrid>
+          <ConnectCards variants={fadeInUp}>
+            {connectLinks.map(link => (
+              <ConnectCard
+                key={link.label}
+                href={link.href}
+                target={link.label !== 'Email' ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                whileHover={{ x: 4 }}
+              >
+                <div className="icon-box">
+                  <link.icon />
+                </div>
+                <div className="card-text">
+                  <div className="card-label">{link.label}</div>
+                  <div className="card-value">{link.value}</div>
+                </div>
+              </ConnectCard>
+            ))}
+            
+            <LocationInfo>
+              <div className="icon-box">
+                <FaMapMarkerAlt />
               </div>
-            </SocialLinks>
-          </ContactInfo>
+              <div className="location-text">
+                <div className="loc-label">Location</div>
+                <div className="loc-value">India</div>
+              </div>
+            </LocationInfo>
+          </ConnectCards>
 
           <ContactForm
-            variants={itemVariants}
+            variants={fadeInUp}
             onSubmit={handleSubmit}
-            whileHover={{ scale: 1.01 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 10 }}
           >
-            <FormTitle>Send Message</FormTitle>
-
             <FormGroup>
-              <label htmlFor="name">Name *</label>
-              <input
-                type="text"
-                id="name"
+              <label>Name</label>
+              <input 
+                type="text" 
                 name="name"
+                placeholder="Your name"
                 value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Yash Borse"
+                onChange={handleChange}
                 required
               />
             </FormGroup>
-
             <FormGroup>
-              <label htmlFor="email">Email *</label>
-              <input
-                type="email"
-                id="email"
+              <label>Email</label>
+              <input 
+                type="email" 
                 name="email"
+                placeholder="your@email.com"
                 value={formData.email}
-                onChange={handleInputChange}
-                placeholder="yashborse432005@gmail.com"
+                onChange={handleChange}
                 required
               />
             </FormGroup>
-
             <FormGroup>
-              <label htmlFor="subject">Subject *</label>
-              <input
-                type="text"
-                id="subject"
+              <label>Subject</label>
+              <input 
+                type="text" 
                 name="subject"
-                value={formData.subject}
-                onChange={handleInputChange}
                 placeholder="What's this about?"
+                value={formData.subject}
+                onChange={handleChange}
                 required
               />
             </FormGroup>
-
             <FormGroup>
-              <label htmlFor="message">Message *</label>
-              <textarea
-                id="message"
+              <label>Message</label>
+              <textarea 
                 name="message"
-                value={formData.message}
-                onChange={handleInputChange}
                 placeholder="Tell me about your project..."
+                value={formData.message}
+                onChange={handleChange}
                 required
               />
             </FormGroup>
-
             <SubmitButton
               type="submit"
-              disabled={isSubmitting}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
-              {isSubmitting ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                  >
-                    ⚪
-                  </motion.div>
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <FaPaperPlane />
-                  Send Message
-                </>
-              )}
+              <FaPaperPlane /> Send Message
             </SubmitButton>
-
-            {showSuccess && (
-              <SuccessMessage
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <FaCheckCircle />
-                Message sent successfully! I'll get back to you soon.
-              </SuccessMessage>
-            )}
           </ContactForm>
-        </ContactContent>
+        </ContactGrid>
       </motion.div>
     </ContactContainer>
   );

@@ -14,7 +14,7 @@ function AppContent() {
   return (
     <StyledThemeProvider theme={currentTheme}>
       <GlobalStyles />
-      <Router>
+      <Router basename="/Portfolio-Website">
         <MainLayout>
           <Routes>
             <Route path="/" element={<Home />} />

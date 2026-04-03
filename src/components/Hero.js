@@ -1,56 +1,158 @@
-import React, { useRef, useState, useCallback } from 'react';
-import styled from 'styled-components';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaArrowRight, FaCommentDots } from 'react-icons/fa';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { motion } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaEnvelope, FaDownload, FaGooglePlay } from 'react-icons/fa';
 import { Link as ScrollLink } from 'react-scroll';
-import { ReactTyped as Typed } from 'react-typed';
-import { fadeInUp, staggerContainer, profile3D } from '../styles/animations';
+import { staggerContainer, fadeInUp } from '../styles/animations';
+import { getExperienceYears } from '../utils/ExperienceCalculator';
+
+// ========================================
+// TERMINAL TYPING HOOK
+// ========================================
+const useTerminalTyping = (commands) => {
+  const [lines, setLines] = useState([]);
+  const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
+  const [currentText, setCurrentText] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 530);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  useEffect(() => {
+    if (currentCommandIndex >= commands.length) {
+      setIsTyping(false);
+      return;
+    }
+
+    const cmd = commands[currentCommandIndex];
+    let charIndex = 0;
+
+    const typeInterval = setInterval(() => {
+      if (charIndex <= cmd.input.length) {
+        setCurrentText(cmd.input.substring(0, charIndex));
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+        
+        setTimeout(() => {
+          setLines(prev => [
+            ...prev,
+            { type: 'input', text: cmd.input },
+            { type: 'output', text: cmd.output, isJson: cmd.isJson }
+          ]);
+          setCurrentText('');
+          setCurrentCommandIndex(prev => prev + 1);
+        }, 300);
+      }
+    }, 45);
+
+    return () => clearInterval(typeInterval);
+  }, [currentCommandIndex, commands]);
+
+  return { lines, currentText, isTyping, showCursor, currentCommandIndex };
+};
+
+// ========================================
+// PARTICLE BACKGROUND
+// ========================================
+const ParticleCanvas = () => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef();
+  const particlesRef = useRef([]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Initialize particles
+    const count = 60;
+    particlesRef.current = Array.from({ length: count }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 2 + 0.5,
+      opacity: Math.random() * 0.3 + 0.1
+    }));
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particlesRef.current.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(184, 115, 51, ${p.opacity})`;
+        ctx.fill();
+      });
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationRef.current);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: 0,
+    opacity: 0.6
+  }} />;
+};
 
 // ========================================
 // STYLED COMPONENTS
 // ========================================
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+`;
 
 const HeroContainer = styled.section`
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
   position: relative;
-  padding: 0 2rem;
+  padding: 100px 2rem 2rem;
   overflow: hidden;
   background-color: ${({ theme }) => theme.colors.background};
-  
-  /* Decorative Background Elements */
-  &::before {
-    content: '';
-    position: absolute;
-    top: -10%;
-    right: -5%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, ${({ theme }) => theme.colors.primary}10 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: 0;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -10%;
-    left: -5%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, ${({ theme }) => theme.colors.accent}10 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: 0;
-  }
 `;
 
 const HeroContent = styled.div`
   max-width: 1200px;
   width: 100%;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
   position: relative;
@@ -58,273 +160,287 @@ const HeroContent = styled.div`
   
   @media (max-width: 968px) {
     grid-template-columns: 1fr;
-    text-align: center;
-    gap: 3rem;
+    gap: 2rem;
   }
 `;
 
-const TextContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+// Terminal Window
+const TerminalWindow = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.terminalBg};
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: ${({ theme }) => theme.fonts.mono};
+  max-width: 520px;
+  width: 100%;
   
   @media (max-width: 968px) {
-    align-items: center;
+    max-width: 100%;
+    order: 2;
   }
 `;
 
-const Greeting = styled(motion.h2)`
-  font-family: ${({ theme }) => theme.fonts.secondary}; // Use Serif/Display font if available in secondary
-  font-size: clamp(3rem, 5vw, 4.5rem);
+const TerminalHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+`;
+
+const TerminalDot = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: ${({ color }) => color};
+`;
+
+const TerminalTitle = styled.span`
+  color: #666;
+  font-size: 0.75rem;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const TerminalBody = styled.div`
+  padding: 1rem 1.25rem;
+  min-height: 280px;
+  max-height: 340px;
+  overflow-y: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+  }
+`;
+
+const TerminalLine = styled.div`
+  color: ${({ theme }) => theme.colors.terminalText};
+  margin-bottom: 0.3rem;
+  word-break: break-word;
+  
+  .prompt {
+    color: ${({ theme }) => theme.colors.terminalPrompt};
+    margin-right: 8px;
+  }
+  
+  .command {
+    color: #e0e0e0;
+  }
+  
+  .json-key {
+    color: #82aaff;
+  }
+  
+  .json-value {
+    color: #c3e88d;
+  }
+  
+  .json-bracket {
+    color: #89ddff;
+  }
+  
+  .output-text {
+    color: #a0a0a0;
+    padding-left: 4px;
+  }
+  
+  .green {
+    color: #4ade80;
+  }
+`;
+
+const Cursor = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: ${({ theme }) => theme.colors.primary};
+  animation: ${blink} 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+`;
+
+// Right Side - Name & Title
+const TextContent = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  
+  @media (max-width: 968px) {
+    text-align: center;
+    align-items: center;
+    order: 1;
+  }
+`;
+
+const NameHeading = styled(motion.h1)`
+  font-family: ${({ theme }) => theme.fonts.secondary};
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text};
   line-height: 1.1;
-  margin-bottom: 1rem;
-  
-  span.highlight {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-  
-  span.wave {
-    display: inline-block;
-    animation: wave 2.5s ease-in-out infinite;
-    transform-origin: 70% 70%;
-    font-size: 0.8em;
-  }
-  
-  @keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    10% { transform: rotate(14deg); }
-    20% { transform: rotate(-8deg); }
-    30% { transform: rotate(14deg); }
-    40% { transform: rotate(-4deg); }
-    50% { transform: rotate(10deg); }
-    60%, 100% { transform: rotate(0deg); }
-  }
+  margin-bottom: 0.75rem;
+  font-style: italic;
+  letter-spacing: -0.02em;
 `;
 
-const RoleText = styled(motion.h3)`
-  font-family: ${({ theme }) => theme.fonts.primary};
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.textSecondary}; // Almost black/dark grey
-  margin-bottom: 2rem;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-
-  @media (max-width: 968px) {
-    justify-content: center;
-  }
-`;
-
-const Description = styled(motion.p)`
+const RoleSubtext = styled(motion.div)`
   font-family: ${({ theme }) => theme.fonts.primary};
   font-size: 1.1rem;
-  line-height: 1.6;
+  font-weight: 400;
   color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: 2.5rem;
-  max-width: 500px;
-  
-  @media (max-width: 968px) {
-    margin-left: auto;
-    margin-right: auto;
-  }
+  margin-bottom: 0.5rem;
 `;
 
-const ButtonGroup = styled(motion.div)`
+const SpecialtiesList = styled(motion.div)`
   display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
   
   @media (max-width: 968px) {
     justify-content: center;
-    flex-direction: row; // Keep row on mobile for better look
-    gap: 1.5rem;
   }
 `;
 
-const HireMeButton = styled(motion.button)`
-  padding: 1rem 2.5rem;
+const SpecialtyTag = styled.span`
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 0.75rem;
+  color: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.primaryGlass};
+  border: 1px solid ${({ theme }) => theme.colors.primary}25;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+`;
+
+const HeroActions = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: 968px) {
+    justify-content: center;
+  }
+`;
+
+const PrimaryButton = styled(ScrollLink)`
+  padding: 0.75rem 1.75rem;
   font-family: ${({ theme }) => theme.fonts.primary};
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  border-radius: 5px; // Slightly rounded, not pill
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   background: ${({ theme }) => theme.colors.primary};
   color: white;
-  box-shadow: 0 10px 20px ${({ theme }) => theme.colors.primaryGlass};
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 15px 30px ${({ theme }) => theme.colors.primaryGlass}; // Stronger shadow on hover
-  }
-  
-  svg {
-    font-size: 0.9rem;
-  }
-`;
-
-const DownloadLink = styled(motion.a)`
-  font-family: ${({ theme }) => theme.fonts.primary};
-  font-size: 1rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.primary};
-  text-decoration: none;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.primary}40;
-  padding-bottom: 2px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
   
   &:hover {
-    color: ${({ theme }) => theme.colors.accent};
-    border-color: ${({ theme }) => theme.colors.accent};
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px ${({ theme }) => theme.colors.primaryGlass};
+    color: white;
   }
 `;
 
-const SocialsRow = styled(motion.div)`
+const SecondaryLink = styled.a`
+  font-family: ${({ theme }) => theme.fonts.primary};
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textSecondary};
   display: flex;
   align-items: center;
-  gap: 1rem;
-  
-  .label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-right: 0.5rem;
-    color: ${({ theme }) => theme.colors.text};
-  }
-
-  @media (max-width: 968px) {
-    justify-content: center;
-  }
-`;
-
-const SocialIcon = styled(motion.a)`
-  color: #333; // Default dark icon color
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
   
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
-// Right Side - Image & Floating Elements
-
-const VisualContent = styled(motion.div)`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  perspective: 1000px;
-`;
-
-const ImageContainer = styled(motion.div)`
-  width: 400px;
-  height: 500px; // Portrait aspect ratio
-  position: relative;
-  z-index: 1;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 20px 20px 60px rgba(0,0,0,0.05); // Soft shadow
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  @media (max-width: 768px) {
-    width: 300px;
-    height: 380px;
-  }
-`;
-
-const FloatingCard = styled(motion.div)`
-  position: absolute;
-  background: ${({ theme }) => theme.colors.surface}; // Use surface color for better opacity in dark mode
-  backdrop-filter: blur(10px);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 15px 35px ${({ theme }) => theme.colors.shadow};
-  border: 1px solid ${({ theme }) => theme.colors.border}; // Add border for edge definition
+const SocialRow = styled(motion.div)`
   display: flex;
   align-items: center;
   gap: 1rem;
-  z-index: 5;
-  min-width: 200px;
   
-  &.expert-card {
-    top: 10%;
-    right: -10%;
-    @media (max-width: 1200px) { right: -5%; }
-    @media (max-width: 968px) { right: 5%; top: 5%; }
-  }
-  
-  &.status-card {
-    bottom: 10%;
-    left: -10%;
-    @media (max-width: 1200px) { left: -5%; }
-    @media (max-width: 968px) { left: 5%; bottom: 5%; }
-  }
-  
-  .icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: ${({ theme }) => theme.colors.primary}20;
-    color: ${({ theme }) => theme.colors.primary};
-    display: flex;
-    align-items: center;
+  @media (max-width: 968px) {
     justify-content: center;
-    font-size: 1.2rem;
-  }
-  
-  .text-box {
-    display: flex;
-    flex-direction: column;
-    
-    span.label {
-      font-size: 0.8rem;
-      color: ${({ theme }) => theme.colors.textSecondary};
-    }
-    span.value {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: ${({ theme }) => theme.colors.text};
-    }
   }
 `;
 
-const DecorativeCircle = styled(motion.div)`
-  position: absolute;
-  border-radius: 50%;
-  z-index: 0;
+const SocialIcon = styled.a`
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
   
-  &.circle-1 {
-    width: 80px;
-    height: 80px;
-    background: transparent;
-    border: 5px solid ${({ theme }) => theme.colors.accent};
-    top: -20px;
-    left: 20px;
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+    transform: translateY(-2px);
+  }
+`;
+
+// Stats Bar
+const StatsBar = styled(motion.div)`
+  max-width: 1200px;
+  width: 100%;
+  margin: 3rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: ${({ theme }) => theme.colors.glass.backdrop};
+  backdrop-filter: blur(20px);
+  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const StatItem = styled.div`
+  padding: 1.25rem 1rem;
+  text-align: center;
+  border-right: 1px solid ${({ theme }) => theme.colors.glass.border};
+  
+  &:last-child {
+    border-right: none;
   }
   
-  &.circle-2 {
-    width: 40px;
-    height: 40px;
-    background: ${({ theme }) => theme.colors.primary};
-    bottom: 50px;
-    right: -20px;
+  @media (max-width: 768px) {
+    &:nth-child(2) {
+      border-right: none;
+    }
+    &:nth-child(3), &:nth-child(4) {
+      border-top: 1px solid ${({ theme }) => theme.colors.glass.border};
+    }
+  }
+  
+  .stat-value {
+    font-family: ${({ theme }) => theme.fonts.secondary};
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.primary};
+    margin-bottom: 0.15rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.textMuted};
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 `;
 
@@ -333,144 +449,182 @@ const DecorativeCircle = styled(motion.div)`
 // HERO COMPONENT
 // ========================================
 
+const TERMINAL_COMMANDS = [
+  {
+    input: 'whoami',
+    output: 'yash-borse',
+    isJson: false
+  },
+  {
+    input: 'cat profile.json',
+    output: JSON.stringify({
+      role: "Full Stack Developer",
+      company: "ZenZero Developer",
+      app: "Wheel Deals",
+      stack: ["Spring Boot", "React Native", "PostgreSQL", "GitHub Actions", "Docker", "VPS"],
+      location: "India"
+    }, null, 2),
+    isJson: true
+  },
+  {
+    input: 'echo $MISSION',
+    output: '"Building secure, high-performance systems with automated CI/CD and production-ready architecture."',
+    isJson: false
+  }
+];
+
 const Hero = () => {
-  const roles = [
-    'User Interface Designer',
-    'Full Stack Developer',
-    'Java Specialist',
-  ];
+  const experienceYears = getExperienceYears();
+  const terminalBodyRef = useRef(null);
 
-  // Mouse move effect for image
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-100, 100], [5, -5]);
-  const rotateY = useTransform(x, [-100, 100], [-5, 5]);
+  const { lines, currentText, showCursor, currentCommandIndex } = useTerminalTyping(TERMINAL_COMMANDS);
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set(e.clientX - rect.left - rect.width / 2);
-    y.set(e.clientY - rect.top - rect.height / 2);
-  };
+  // Auto scroll terminal
+  useEffect(() => {
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
+  }, [lines, currentText]);
 
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+  const renderJsonOutput = (text) => {
+    // Simple JSON syntax highlighting
+    return text.split('\n').map((line, i) => {
+      const highlighted = line
+        .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+        .replace(/: "([^"]+)"/g, ': <span class="json-value">"$1"</span>')
+        .replace(/[\[\]{},]/g, (match) => `<span class="json-bracket">${match}</span>`);
+      
+      return (
+        <div key={i} dangerouslySetInnerHTML={{ __html: highlighted }} />
+      );
+    });
   };
 
   return (
     <HeroContainer id="hero">
+      <ParticleCanvas />
+      
       <HeroContent>
-        {/* LEFT COLUMN: TEXT */}
-        <TextContent>
-          <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+        {/* LEFT: Terminal */}
+        <TerminalWindow
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <TerminalHeader>
+            <TerminalDot color="#ff5f57" />
+            <TerminalDot color="#febc2e" />
+            <TerminalDot color="#28c840" />
+            <TerminalTitle>zsh — yash@dev</TerminalTitle>
+          </TerminalHeader>
+          <TerminalBody ref={terminalBodyRef}>
+            {lines.map((line, index) => (
+              <TerminalLine key={index}>
+                {line.type === 'input' ? (
+                  <>
+                    <span className="prompt">❯</span>
+                    <span className="command">{line.text}</span>
+                  </>
+                ) : line.isJson ? (
+                  <div className="output-text">{renderJsonOutput(line.text)}</div>
+                ) : (
+                  <div className="output-text green">{line.text}</div>
+                )}
+              </TerminalLine>
+            ))}
+            {currentCommandIndex < TERMINAL_COMMANDS.length && (
+              <TerminalLine>
+                <span className="prompt">❯</span>
+                <span className="command">{currentText}</span>
+                {showCursor && <Cursor />}
+              </TerminalLine>
+            )}
+            
+            {currentCommandIndex >= TERMINAL_COMMANDS.length && (
+              <TerminalLine>
+                <span className="prompt">❯</span>
+                {showCursor && <Cursor />}
+              </TerminalLine>
+            )}
+          </TerminalBody>
+        </TerminalWindow>
 
-            <Greeting variants={fadeInUp}>
-              Hi, <br />
-              I'm <span className="highlight">Yash Borse</span>
-              <span className="wave" style={{ marginLeft: '10px' }}>👋</span>
-            </Greeting>
-
-            <RoleText variants={fadeInUp}>
-              <Typed
-                strings={roles}
-                typeSpeed={50}
-                backSpeed={30}
-                loop
-              />
-            </RoleText>
-
-            <Description variants={fadeInUp}>
-              I design and build premium web applications with a focus on
-              clean aesthetics and robust performance. Based in India.
-            </Description>
-
-            <ButtonGroup variants={fadeInUp}>
-              <ScrollLink to="projects" smooth={true} duration={500} offset={-80}>
-                <HireMeButton whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  Hire Me <FaArrowRight />
-                </HireMeButton>
-              </ScrollLink>
-
-              <DownloadLink
-                href="/Portfolio-Website/Yash_Borse.pdf"
-                download
-                whileHover={{ x: 5 }}
-              >
-                <FaDownload /> Download CV
-              </DownloadLink>
-            </ButtonGroup>
-
-            <SocialsRow variants={fadeInUp}>
-              {/* <span className="label">Check out my:</span> */}
-              <SocialIcon href="https://github.com/yashborse4" target="_blank" aria-label="GitHub">
-                <FaGithub />
-              </SocialIcon>
-              <SocialIcon href="https://www.linkedin.com/in/yashborse" target="_blank" aria-label="LinkedIn">
-                <FaLinkedin />
-              </SocialIcon>
-              <SocialIcon href="mailto:yashborse432005@gmail.com" aria-label="Email">
-                <FaEnvelope />
-              </SocialIcon>
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', fontWeight: '600' }}>
-                Let's Chat <FaCommentDots style={{ color: '#FF6B6B' }} />
-              </div>
-            </SocialsRow>
-
-          </motion.div>
-        </TextContent>
-
-        {/* RIGHT COLUMN: IMAGE & FLOATING UI */}
-        <VisualContent
+        {/* RIGHT: Name & Info */}
+        <TextContent
+          variants={staggerContainer}
           initial="hidden"
           animate="visible"
-          variants={profile3D}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{ rotateX, rotateY }}
         >
-          {/* Decorative Elements */}
-          <DecorativeCircle className="circle-1" animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} />
-          <DecorativeCircle className="circle-2" animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }} />
-
-          <ImageContainer>
-            <img src="/assets/pic.png" alt="Yash Borse" />
-          </ImageContainer>
-
-          {/* Floating Cards */}
-          <FloatingCard
-            className="expert-card"
-            variants={fadeInUp}
-            custom={1}
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-          >
-            <div className="icon-box">
+          <NameHeading variants={fadeInUp}>
+            Yash Borse
+          </NameHeading>
+          
+          <RoleSubtext variants={fadeInUp}>
+            Full Stack Developer · React Native · Java
+          </RoleSubtext>
+          
+          <SpecialtiesList variants={fadeInUp}>
+            <SpecialtyTag>Spring Boot</SpecialtyTag>
+            <SpecialtyTag>React Native</SpecialtyTag>
+            <SpecialtyTag>PostgreSQL</SpecialtyTag>
+            <SpecialtyTag>GraphQL</SpecialtyTag>
+            <SpecialtyTag>Docker</SpecialtyTag>
+          </SpecialtiesList>
+          
+          <HeroActions variants={fadeInUp}>
+            <PrimaryButton
+              to="contact"
+              smooth={true}
+              duration={500}
+              offset={-80}
+            >
+              Get in Touch
+            </PrimaryButton>
+            <SecondaryLink 
+              href="/Portfolio-Website/Yash_Borse.pdf"
+              download
+            >
+              <FaDownload /> Resume
+            </SecondaryLink>
+          </HeroActions>
+          
+          <SocialRow variants={fadeInUp}>
+            <SocialIcon href="https://github.com/yashborse4" target="_blank" aria-label="GitHub">
               <FaGithub />
-            </div>
-            <div className="text-box">
-              <span className="label">Expert on</span>
-              <span className="value">Spring Boot & React</span>
-            </div>
-          </FloatingCard>
-
-          <FloatingCard
-            className="status-card"
-            variants={fadeInUp}
-            custom={2}
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          >
-            <div className="icon-box" style={{ background: '#E0F7FA', color: '#00BCD4' }}>
-              <FaArrowRight style={{ transform: 'rotate(-45deg)' }} />
-            </div>
-            <div className="text-box">
-              <span className="label">Projects</span>
-              <span className="value">10+ Completed</span>
-            </div>
-          </FloatingCard>
-
-        </VisualContent>
+            </SocialIcon>
+            <SocialIcon href="https://www.linkedin.com/in/yashborse" target="_blank" aria-label="LinkedIn">
+              <FaLinkedin />
+            </SocialIcon>
+            <SocialIcon href="mailto:yashborse432005@gmail.com" aria-label="Email">
+              <FaEnvelope />
+            </SocialIcon>
+          </SocialRow>
+        </TextContent>
       </HeroContent>
+
+      {/* Stats Bar */}
+      <StatsBar
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 1.2 }}
+      >
+        <StatItem>
+          <div className="stat-value">{experienceYears}+</div>
+          <div className="stat-label">Years Experience</div>
+        </StatItem>
+        <StatItem>
+          <div className="stat-value">10+</div>
+          <div className="stat-label">Projects Built</div>
+        </StatItem>
+        <StatItem>
+          <div className="stat-value"><FaGooglePlay style={{ display: 'inline', fontSize: '1.1rem', verticalAlign: 'middle' }} /></div>
+          <div className="stat-label">Published on Play Store</div>
+        </StatItem>
+        <StatItem>
+          <div className="stat-value">2+</div>
+          <div className="stat-label">Certifications</div>
+        </StatItem>
+      </StatsBar>
     </HeroContainer>
   );
 };

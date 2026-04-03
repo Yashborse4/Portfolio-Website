@@ -1,60 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
 import { Link as ScrollLink } from 'react-scroll';
-import ThemeToggle from './ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
-const NavContainer = styled(motion.nav)`
+// ========================================
+// STYLED COMPONENTS
+// ========================================
+
+const NavWrapper = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
-  padding: 1rem 0;
-  backdrop-filter: blur(20px);
-  background: ${({ scrolled, theme }) =>
-    scrolled
-      ? theme.colors.glass.backdrop
-      : 'transparent'
-  };
-  border-bottom: ${({ scrolled, theme }) =>
-    scrolled
-      ? `1px solid ${theme.colors.glass.border}`
-      : 'none'
-  };
-  transition: all 0.3s ease;
-`;
-
-const NavContent = styled.div`
-  max-width: ${({ theme }) => theme.sizes.maxWidth};
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
+  
   @media (max-width: 768px) {
-    padding: 0 1rem;
+    top: 12px;
+    width: calc(100% - 24px);
   }
 `;
 
-const Logo = styled(motion.div)`
+const NavPill = styled(motion.nav)`
+  background: ${({ theme }) => theme.colors.glass.backdrop};
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid ${({ theme }) => theme.colors.glass.border};
+  border-radius: 50px;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: ${({ theme }) => theme.colors.glass.shadow};
+  transition: all 0.3s ease;
+  
+  @media (max-width: 768px) {
+    padding: 0.6rem 1rem;
+    justify-content: space-between;
+  }
+`;
+
+const Logo = styled(ScrollLink)`
   font-family: ${({ theme }) => theme.fonts.secondary};
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: ${({ theme }) => theme.colors.primary};
   cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
 `;
 
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  gap: 2rem;
-
+  gap: 0.25rem;
+  
   @media (max-width: 768px) {
     display: none;
   }
@@ -62,60 +63,44 @@ const NavLinks = styled.div`
 
 const NavLink = styled(ScrollLink)`
   font-family: ${({ theme }) => theme.fonts.primary};
+  font-size: 0.85rem;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textSecondary};
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  padding: 0.5rem 0;
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(135deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.accent});
-    transition: width 0.3s ease;
-  }
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.text};
-    
-    &:after {
-      width: 100%;
-    }
-  }
-
-  &.active {
-    color: ${({ theme }) => theme.colors.primary};
-    
-    &:after {
-      width: 100%;
-    }
-  }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const SocialLink = styled(motion.a)`
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
   
   &:hover {
+    color: ${({ theme }) => theme.colors.text};
+    background: ${({ theme }) => theme.colors.primaryGlass};
+  }
+  
+  &.active {
     color: ${({ theme }) => theme.colors.primary};
-    transform: translateY(-2px);
+    background: ${({ theme }) => theme.colors.primaryGlass};
+  }
+`;
+
+const ThemeButton = styled(motion.button)`
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.primaryGlass};
+  color: ${({ theme }) => theme.colors.primary};
+  border: 1px solid ${({ theme }) => theme.colors.primary}30;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: white;
   }
 `;
 
@@ -124,23 +109,24 @@ const MobileMenuButton = styled(motion.button)`
   background: none;
   border: none;
   color: ${({ theme }) => theme.colors.text};
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  padding: 0.5rem;
-
+  padding: 0.4rem;
+  
   @media (max-width: 768px) {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
-const MobileMenu = styled(motion.div)`
+const MobileOverlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: ${({ theme }) => theme.colors.backgroundSolid};
-  backdrop-filter: blur(20px);
   z-index: 1001;
   display: flex;
   flex-direction: column;
@@ -160,14 +146,7 @@ const MobileNavLink = styled(ScrollLink)`
   
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
-    transform: scale(1.1);
   }
-`;
-
-const MobileSocialLinks = styled.div`
-  display: flex;
-  gap: 2rem;
-  margin-top: 2rem;
 `;
 
 const MobileCloseButton = styled(motion.button)`
@@ -181,18 +160,12 @@ const MobileCloseButton = styled(motion.button)`
   cursor: pointer;
 `;
 
+// ========================================
+// NAVBAR COMPONENT
+// ========================================
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const navItems = [
     { name: 'Home', to: 'hero' },
@@ -203,84 +176,44 @@ const Navbar = () => {
     { name: 'Contact', to: 'contact' }
   ];
 
-  const socialLinks = [
-    { icon: FaGithub, href: 'https://github.com/yashborse4', label: 'GitHub' },
-    { icon: FaLinkedin, href: 'https://www.linkedin.com/in/yashborse/', label: 'LinkedIn' },
-    { icon: FaTwitter, href: 'https://twitter.com/yashborse4u', label: 'Twitter' },
-    { icon: FaEnvelope, href: 'mailto:yashborse432005@gmail.com', label: 'Email' }
-  ];
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
     <>
-      <NavContainer
-        scrolled={scrolled}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <NavContent>
-          <ScrollLink to="hero" smooth={true} duration={500} offset={0}>
-            <Logo
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Yash Borse
-            </Logo>
-          </ScrollLink>
+      <NavWrapper>
+        <NavPill
+          initial={{ y: -60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <Logo to="hero" smooth={true} duration={500} offset={0}>
+            YB.
+          </Logo>
 
           <NavLinks>
-            {navItems.map((item, index) => (
-              <motion.div
+            {navItems.map((item) => (
+              <NavLink
                 key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                to={item.to}
+                smooth={true}
+                duration={500}
+                spy={true}
+                offset={-100}
+                activeClass="active"
               >
-                <NavLink
-                  to={item.to}
-                  smooth={true}
-                  duration={500}
-                  spy={true}
-                  offset={-80}
-                  activeClass="active"
-                  hashSpy={true}
-                  ignoreCancelEvents={false}
-                >
-                  {item.name}
-                </NavLink>
-              </motion.div>
+                {item.name}
+              </NavLink>
             ))}
           </NavLinks>
 
-          <SocialLinks>
-            {socialLinks.map((social, index) => (
-              <SocialLink
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                aria-label={social.label}
-              >
-                <social.icon />
-              </SocialLink>
-            ))}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.9 }}
-            >
-              <ThemeToggle />
-            </motion.div>
-          </SocialLinks>
+          <ThemeButton
+            onClick={toggleTheme}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Toggle theme"
+          >
+            {isDarkMode ? <FaSun /> : <FaMoon />}
+          </ThemeButton>
 
           <MobileMenuButton
             onClick={() => setMobileMenuOpen(true)}
@@ -288,12 +221,12 @@ const Navbar = () => {
           >
             <FaBars />
           </MobileMenuButton>
-        </NavContent>
-      </NavContainer>
+        </NavPill>
+      </NavWrapper>
 
       <AnimatePresence>
         {mobileMenuOpen && (
-          <MobileMenu
+          <MobileOverlay
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -309,51 +242,36 @@ const Navbar = () => {
             {navItems.map((item, index) => (
               <motion.div
                 key={item.name}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.08 }}
               >
                 <MobileNavLink
                   to={item.to}
                   smooth={true}
                   duration={500}
-                  offset={-80}
+                  offset={-100}
                   onClick={closeMobileMenu}
-                  hashSpy={true}
-                  ignoreCancelEvents={false}
                 >
                   {item.name}
                 </MobileNavLink>
               </motion.div>
             ))}
 
-            <MobileSocialLinks>
-              {socialLinks.map((social, index) => (
-                <SocialLink
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  aria-label={social.label}
-                >
-                  <social.icon />
-                </SocialLink>
-              ))}
-            </MobileSocialLinks>
-
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.5 }}
             >
-              <ThemeToggle showLabel={true} />
+              <ThemeButton
+                onClick={toggleTheme}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {isDarkMode ? <FaSun /> : <FaMoon />}
+              </ThemeButton>
             </motion.div>
-          </MobileMenu>
+          </MobileOverlay>
         )}
       </AnimatePresence>
     </>
