@@ -55,6 +55,35 @@
     ]
   },
   {
+    "id": 4,
+    "title": "NetScan Pro - Network Analyzer",
+    "description": "A comprehensive network analysis tool for monitoring, scanning, and troubleshooting network infrastructure with real-time insights.",
+    "image": "",
+    "technologies": [
+      "Python",
+      "Scapy",
+      "NetworkX",
+      "Django",
+      "WebSockets",
+      "Docker",
+      "Redis"
+    ],
+    "githubUrl": "https://github.com/Yashborse4/NetScan-Pro",
+    "liveUrl": "#",
+    "featured": true,
+    "category": "Network Utility",
+    "completedDate": "2023-07-25",
+    "features": [
+      "Network discovery and device fingerprinting",
+      "Port scanning and service detection",
+      "Network traffic analysis and monitoring",
+      "Bandwidth usage tracking",
+      "Security vulnerability scanning",
+      "Interactive network topology mapping",
+      "Custom scan scheduling and reporting"
+    ]
+  },
+  {
     "id": 3,
     "title": "Campus Surveillance - Smart Tracking",
     "description": "An intelligent student tracking and face detection system for campus security. Features real-time monitoring, automated attendance/tracking, and high-precision face recognition using computer vision.",
@@ -82,32 +111,55 @@
     ]
   },
   {
-    "id": 4,
-    "title": "NetScan Pro - Network Analyzer",
-    "description": "A comprehensive network analysis tool for monitoring, scanning, and troubleshooting network infrastructure with real-time insights.",
+    "id": 8,
+    "title": "KindNet - AI Sentiment Detection",
+    "description": "An end-to-end deep learning platform designed to detect bullying and toxic speech on social media. Features a sophisticated NLP model for real-time sentiment analysis and a sleek monitoring dashboard.",
     "image": "",
     "technologies": [
       "Python",
-      "Scapy",
-      "NetworkX",
-      "Django",
-      "WebSockets",
-      "Docker",
-      "Redis"
+      "TensorFlow",
+      "Keras",
+      "React",
+      "Node.js",
+      "NLP",
+      "Deep Learning"
     ],
-    "githubUrl": "https://github.com/Yashborse4/netscan-pro",
+    "githubUrl": "https://github.com/Yashborse4/KindNet-Frotend",
+    "liveUrl": "#",
+    "featured": true,
+    "category": "ML/Deep Learning",
+    "completedDate": "2024-03-20",
+    "features": [
+      "Developed a custom Deep Learning model for text classification and sentiment analysis",
+      "Built a real-time monitoring dashboard to visualize toxicity trends",
+      "Implemented a secure REST API for backend-model communication",
+      "Optimized NLP pipeline for low-latency inference on social media streams",
+      "Multi-repository architecture spanning specialized ML backend and React frontend"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "AutoSMS - Automated Mailer",
+    "description": "A high-utility Android application built for automated SMS broadcasting and message scheduling, streamlining bulk communication workflows.",
+    "image": "",
+    "technologies": [
+      "Android SDK",
+      "Java",
+      "SQLite",
+      "Material Design",
+      "SMS Manager API"
+    ],
+    "githubUrl": "https://github.com/Yashborse4/AutoSMS-Mailer",
     "liveUrl": "#",
     "featured": false,
-    "category": "Network Utility",
-    "completedDate": "2023-07-25",
+    "category": "Mobile App",
+    "completedDate": "2023-12-05",
     "features": [
-      "Network discovery and device fingerprinting",
-      "Port scanning and service detection",
-      "Network traffic analysis and monitoring",
-      "Bandwidth usage tracking",
-      "Security vulnerability scanning",
-      "Interactive network topology mapping",
-      "Custom scan scheduling and reporting"
+      "Automated bulk SMS broadcasting with template support",
+      "Scheduled messaging system for delayed delivery",
+      "Contact group management with SQLite persistent storage",
+      "Real-time delivery status tracking and logging",
+      "Clean Material Design UI for intuitive campaign management"
     ]
   },
   {
