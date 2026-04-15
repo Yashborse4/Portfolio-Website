@@ -581,7 +581,7 @@ const Hero = () => {
               Get in Touch
             </PrimaryButton>
             <SecondaryLink 
-              href="/Portfolio-Website/Yash_Borse.pdf"
+              href="/Yash_Borse.pdf"
               download
             >
               <FaDownload /> Resume
