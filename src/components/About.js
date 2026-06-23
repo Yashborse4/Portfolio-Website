@@ -337,7 +337,7 @@ const About = () => {
                 <FaGooglePlay className="badge-icon" />
                 <span className="badge-text">Developed & Published "Wheel Deals" — end-to-end delivery</span>
               </AchievementBadge>
-              <ResumeButton href="/Yash_Borse.pdf" download>
+              <ResumeButton href="/Yash_Borse.pdf?v=2" download>
                 <FaDownload /> Download Resume
               </ResumeButton>
             </ActionRow>

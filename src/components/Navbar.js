@@ -235,7 +235,7 @@ const Navbar = () => {
                 {item.name}
               </NavLink>
             ))}
-            <ResumeLink href="/Yash_Borse.pdf" download>
+            <ResumeLink href="/Yash_Borse.pdf?v=2" download>
               Resume
             </ResumeLink>
           </NavLinks>
@@ -298,7 +298,7 @@ const Navbar = () => {
               transition={{ delay: navItems.length * 0.08 }}
             >
               <MobileResumeLink
-                href="/Yash_Borse.pdf"
+                href="/Yash_Borse.pdf?v=2"
                 download
                 onClick={closeMobileMenu}
               >
