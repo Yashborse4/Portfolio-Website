@@ -83,6 +83,23 @@ const NavLink = styled(ScrollLink)`
   }
 `;
 
+const ResumeLink = styled.a`
+  font-family: ${({ theme }) => theme.fonts.primary};
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.4rem 0.75rem;
+  border-radius: 20px;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
+    background: ${({ theme }) => theme.colors.primaryGlass};
+  }
+`;
+
 const ThemeButton = styled(motion.button)`
   width: 34px;
   height: 34px;
@@ -136,6 +153,20 @@ const MobileOverlay = styled(motion.div)`
 `;
 
 const MobileNavLink = styled(ScrollLink)`
+  font-family: ${({ theme }) => theme.fonts.secondary};
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text};
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+const MobileResumeLink = styled.a`
   font-family: ${({ theme }) => theme.fonts.secondary};
   font-size: 1.5rem;
   font-weight: 600;
@@ -204,6 +235,9 @@ const Navbar = () => {
                 {item.name}
               </NavLink>
             ))}
+            <ResumeLink href="/Yash_Borse.pdf" download>
+              Resume
+            </ResumeLink>
           </NavLinks>
 
           <ThemeButton
@@ -257,6 +291,20 @@ const Navbar = () => {
                 </MobileNavLink>
               </motion.div>
             ))}
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: navItems.length * 0.08 }}
+            >
+              <MobileResumeLink
+                href="/Yash_Borse.pdf"
+                download
+                onClick={closeMobileMenu}
+              >
+                Resume
+              </MobileResumeLink>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, scale: 0 }}

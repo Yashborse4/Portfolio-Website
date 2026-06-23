@@ -458,10 +458,10 @@ const TERMINAL_COMMANDS = [
   {
     input: 'cat profile.json',
     output: JSON.stringify({
-      role: "Full Stack Developer",
-      company: "ZenZero Developer (Startup)",
-      app: "Wheel Deals",
-      stack: ["Spring Boot", "React Native", "MySQL", "Redis", "WebSockets", "Docker", "AWS"],
+      role: "Software Engineer",
+      company: "Hindustan Aeronautics Limited (HAL)",
+      app: "CarWala (Wheel Deals)",
+      stack: ["React Native", "Java", "Spring Boot", "Docker", "Redux", "RESTful APIs", "AWS"],
       location: "India"
     }, null, 2),
     isJson: true

@@ -1,9 +1,22 @@
 [
   {
+    "id": 3,
+    "company": "Hindustan Aeronautics Limited (HAL)",
+    "position": "Software Engineer",
+    "duration": "May 2026 - Present",
+    "location": "Nashik, India",
+    "description": "Re-joined the software engineering division to build, test, and deploy critical mobile applications and backend systems for defense-grade aerospace platforms.",
+    "technologies": ["React Native", "Java", "Spring Boot", "Docker", "Redux", "RESTful APIs", "Git"],
+    "achievements": [
+      "Leading development and deployment of secure mobile components and modules for tactical systems.",
+      "Collaborating with aviation engineering teams to enhance performance, reliability, and security of production apps."
+    ]
+  },
+  {
     "id": 2,
     "company": "ZenZero Developer (Startup)",
     "position": "Full Stack Developer",
-    "duration": "Jan 2026 - Present",
+    "duration": "Jan 2026 - May 2026",
     "location": "Remote",
     "description": "Led end-to-end development of 'Wheel Deals', a high-scale automotive marketplace. Engineered a robust ecosystem spanning mobile, backend, and cloud infrastructure.",
     "technologies": ["Spring Boot", "React Native", "MySQL", "Redis", "WebSockets", "Docker", "AWS", "GitHub Actions"],
@@ -18,16 +31,19 @@
   {
     "id": 1,
     "company": "Hindustan Aeronautics Limited (HAL)",
-    "position": "React Native Developer",
-    "duration": "Oct 2024 - Jan 2026",
+    "position": "Software Engineering Intern",
+    "duration": "Oct 2024 - Dec 2025",
     "location": "Nashik, India",
-    "description": "Developed cross-platform mobile applications for the aerospace and defense sector, focusing on high-performance, secure, and scalable solutions for critical operations.",
-    "technologies": ["React Native", "TypeScript", "Redux Toolkit", "PostgreSQL", "Native Modules", "React Navigation", "Docker"],
+    "description": "Developed secure, mission-critical mobile and backend applications for aerospace manufacturing and inspection workflows.",
+    "technologies": ["React Native", "Java", "Android SDK", "Redux", "Spring Boot", "MySQL", "RESTful APIs", "Docker"],
     "achievements": [
-      "Built secure mobile applications for defense-grade systems",
-      "Implemented offline-first architecture for mission-critical apps",
-      "Optimized app performance achieving 60fps animations",
-      "Integrated native device features and sensors for real-time telemetry"
+      "Looms & Wire Harness App (Tejas Fighter Jet): Developed cross-platform React Native mobile/tablet application to automate loom workflow tracking for fighter jet manufacturing, reducing manual tracking by 35%.",
+      "Looms & Wire Harness App (Tejas Fighter Jet): Implemented Redux state management in offline-first app, enabling operator-inspector data sync via local server, improving workflow efficiency by 40%.",
+      "Looms & Wire Harness App (Tejas Fighter Jet): Integrated CAD visualization tools for wire harness assembly, improving accuracy and reducing production errors by 25%.",
+      "IRS Inspection Review App (Tejas Aircraft): Built secure backend system digitizing 100,000+ CRI inspection checkpoints across multiple aircraft inspection workflows.",
+      "IRS Inspection Review App (Tejas Aircraft): Digitized inspection workflows with automated validation and integrated digital signatures/eSign authentication, reducing review time by 60% and saving 50+ hours/month.",
+      "Secure Android Launcher (Device Lockdown): Developed hardened Android launcher using Java and Android SDK, enforcing complete device lockdown for defense-grade systems.",
+      "Secure Android Launcher (Device Lockdown): Engineered encrypted authentication, role-based access control, and remote policy management, ensuring 100% security compliance and reducing manual updates by 60%."
     ]
   }
 ]

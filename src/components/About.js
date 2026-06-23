@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion, useInView } from 'framer-motion';
-import { FaCode, FaServer, FaDatabase, FaTools, FaGooglePlay } from 'react-icons/fa';
+import { FaCode, FaServer, FaDatabase, FaTools, FaGooglePlay, FaDownload } from 'react-icons/fa';
 import { staggerContainer, fadeInUp } from '../styles/animations';
 import { getExperienceYears } from '../utils/ExperienceCalculator';
 
@@ -132,6 +132,37 @@ const AchievementBadge = styled.div`
     font-size: 0.85rem;
     font-weight: 600;
     color: ${({ theme }) => theme.colors.text};
+  }
+`;
+
+const ActionRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  align-items: center;
+`;
+
+const ResumeButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  border: 1px solid transparent;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(184, 115, 51, 0.2);
+  
+  &:hover {
+    background: ${({ theme }) => theme.colors.secondary};
+    transform: translateY(-2px);
+    color: white;
   }
 `;
 
@@ -283,31 +314,33 @@ const About = () => {
               I build things <span>that scale.</span>
             </h3>
             <p className="paragraph">
-              I'm <span className="highlight">Yash Borse</span>, a Full Stack Developer
+              I'm <span className="highlight">Yash Borse</span>, a Software Engineer
               with <span className="highlight">{experience}+ years</span> of experience,
-              currently leading development at <span className="highlight">ZenZero Developer (Startup)</span> — 
-              architecting high-scale automotive solutions like <span className="highlight">Wheel Deals</span>.
+              currently building, testing, and deploying critical defense applications at <span className="highlight">Hindustan Aeronautics Limited (HAL)</span>.
+              Previously, I led end-to-end full stack development at <span className="highlight">ZenZero Developer (Startup)</span>, 
+              architecting the high-scale automotive marketplace <span className="highlight">Wheel Deals</span>.
             </p>
             <p className="paragraph">
               I specialize in building scalable <span className="highlight">Spring Boot</span> backends handling 5,000+ active users 
               and complex transaction workflows. My expertise includes implementing <span className="highlight">WebSocket</span> real-time features, 
-              optimizing media pipelines for <span className="highlight">reduced latency (35%+)</span>, and managing production environments on 
-              <span className="highlight">AWS</span> and <span className="highlight">VPS</span> using Docker and GitHub Actions.
+              engineering offline-first database synchronization architectures, and managing production environments on 
+              <span className="highlight">AWS</span> using Docker and GitHub Actions.
             </p>
             <p className="paragraph">
-              Previously, I served as a React Native Developer at <span className="highlight">Hindustan Aeronautics Limited (HAL), Nashik</span>, 
-              delivering secure mobile solutions for the aerospace sector.
-            </p>
-            <p className="paragraph">
-              I hold a Diploma in Computer Engineering with <span className="highlight">84.5%</span> and 
-              am pursuing my B.E. in Computer Science. I have completed professional training in 
+              I hold a Diploma in Computer Technology with <span className="highlight">84.51%</span> and 
+              am pursuing my B.Tech in Information Technology. I have completed professional training in 
               <span className="highlight">AWS</span> and <span className="highlight">Google Cloud</span>.
             </p>
             
-            <AchievementBadge>
-              <FaGooglePlay className="badge-icon" />
-              <span className="badge-text">Developed & Published "Wheel Deals" — end-to-end delivery</span>
-            </AchievementBadge>
+            <ActionRow>
+              <AchievementBadge style={{ marginTop: 0 }}>
+                <FaGooglePlay className="badge-icon" />
+                <span className="badge-text">Developed & Published "Wheel Deals" — end-to-end delivery</span>
+              </AchievementBadge>
+              <ResumeButton href="/Yash_Borse.pdf" download>
+                <FaDownload /> Download Resume
+              </ResumeButton>
+            </ActionRow>
           </BioSection>
 
           <SkillsSection variants={fadeInUp}>

@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "institution": "JSPM's BSIOTR College of Engineering",
-    "degree": "Bachelor of Engineering in Computer Science",
+    "institution": "JSPM BSIOTR Wagholi, Pune",
+    "degree": "B.Tech in Information Technology",
     "duration": "2023 - 2026",
     "location": "Pune, India",
-    "percentage": "78.5%",
-    "description": "Comprehensive study of computer science and engineering fundamentals with specialization in mobile application development and cross-platform technologies.",
+    "percentage": "CGPA: 7.69/10.0",
+    "description": "Final Year Project: CareerPath AI - Intelligent Career Assistant with 94% resume parsing accuracy, serving 1,000+ users",
     "relevantCoursework": [
       "Data Structures and Algorithms",
       "Mobile Application Development",
@@ -18,41 +18,48 @@
       "Web Technologies"
     ],
     "achievements": [
-      "Consistent academic performance with 78.5% aggregate",
-      "Active member of Mobile App Development Club",
-      "Participated in multiple hackathons and coding competitions",
-      "Built several React Native projects during coursework"
+      "Final Year Project: CareerPath AI with 94% parsing accuracy serving 1,000+ users",
+      "Consistent academic excellence with CGPA 7.69/10.0",
+      "Specialized in scalable backends and Android lockdown applications"
     ],
     "type": "degree"
   },
   {
     "id": 2,
-    "institution": "Shri S.N.J.B Polytechnic Chandwad",
-    "degree": "Diploma in Computer Engineering",
+    "institution": "SNJB Polytechnic Chandwad, Pune",
+    "degree": "Diploma in Computer Technology",
     "duration": "2020 - 2023",
     "location": "Nashik, India",
-    "percentage": "84.5%",
-    "description": "Foundation in computer engineering principles with focus on programming, web development, and mobile technologies.",
+    "percentage": "84.51%",
+    "description": "Final Year Project: Campus Surveillance System",
     "relevantCoursework": [
       "Programming in C/C++",
       "Java Programming",
       "Web Development",
       "Database Systems",
-      "Computer Graphics",
       "Software Testing",
-      "Mobile App Development",
-      "Data Communication"
+      "Mobile App Development"
     ],
     "achievements": [
-      "Graduated with First Class with Distinction (85.2%)",
-      "Top 5% of the batch",
-      "Led college technical fest mobile app development workshop",
-      "Built first mobile app during final year project"
+      "Graduated with Distinction (84.51%)",
+      "Developed an intelligent student tracking and face detection system for security"
     ],
     "type": "diploma"
   },
   {
-    "id": 2,
+    "id": 3,
+    "institution": "Navayuvak Entrepreneurs",
+    "degree": "Ideation Challenge",
+    "duration": "2024",
+    "location": "Pune, India",
+    "description": "Fostering collaborative innovation and creative problem-solving for entrepreneurial ventures.",
+    "achievements": [
+      "Participated and presented innovative solutions for real-world enterprise problems"
+    ],
+    "type": "certification"
+  },
+  {
+    "id": 4,
     "institution": "FreeCodeCamp",
     "degree": "Full Stack Web Development Certification",
     "duration": "2022",
@@ -62,9 +69,7 @@
       "Responsive Web Design",
       "JavaScript Algorithms and Data Structures",
       "Frontend Development Libraries",
-      "Data Visualization",
-      "APIs and Microservices",
-      "Quality Assurance"
+      "APIs and Microservices"
     ],
     "achievements": [
       "Completed 1800+ hours of coursework",
@@ -74,7 +79,7 @@
     "type": "certification"
   },
   {
-    "id": 3,
+    "id": 5,
     "institution": "Udemy",
     "degree": "AWS Solutions Architect & Developer Training",
     "duration": "2024",
@@ -82,35 +87,29 @@
     "description": "Comprehensive professional training covering the design and deployment of scalable, distributed systems on AWS.",
     "relevantCoursework": [
       "AWS Core Services (EC2, S3, RDS)",
-      "VPC & Networking Infrastructure",
       "Serverless Computing (Lambda)",
-      "Security & IAM Best Practices",
-      "Cost & Performance Optimization"
+      "Security & IAM Best Practices"
     ],
     "achievements": [
       "Completed 20+ hours of hands-on professional training",
-      "Architected multiple serverless and containerized project deployments",
-      "Deep understanding of AWS Well-Architected Framework"
+      "Architected serverless and containerized project deployments"
     ],
     "type": "certification"
   },
   {
-    "id": 4,
+    "id": 6,
     "institution": "Google",
-    "degree": "Google Cloud  Developer",
+    "degree": "Google Cloud Developer Training",
     "duration": "2024",
     "location": "Online",
-    "description": "Professional certification for designing, building, and deploying applications on Google Cloud Platform.",
+    "description": "Professional training for designing, building, and deploying applications on Google Cloud Platform.",
     "relevantCoursework": [
       "Application Development",
       "Cloud Storage and Databases",
-      "Security Implementation",
-      "Testing and Deployment",
-      "Application Performance Monitoring"
+      "Security Implementation"
     ],
     "achievements": [
-      "Achieved certification with distinction",
-      "Completed hands-on labs and projects"
+      "Completed hands-on labs and projects on GCP infrastructure"
     ],
     "type": "certification"
   }
